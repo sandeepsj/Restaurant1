@@ -2,7 +2,6 @@
 <%@ page import="java.sql.*"%>
 <%
 	Foods food = new Foods();
-	
 %>
 <!DOCTYPE html>
 <html lang="en">

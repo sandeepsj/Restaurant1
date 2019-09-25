@@ -187,6 +187,10 @@
 		background: #202020;
 		margin: 0px 0px;
 	}
+	.banner-small {
+		min-height: 100px !important;
+		background-size: inherit;
+	}
 	.banner {
 		min-height: 800px !important;
 		background-size: inherit;

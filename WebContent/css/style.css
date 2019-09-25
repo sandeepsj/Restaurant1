@@ -381,7 +381,12 @@ html, body{ height: 100%; }
 /*------------------------------------------------------------------
     BANNER AREA
 -------------------------------------------------------------------*/
-
+.banner-small{
+  background:url(../images/banner.jpg) no-repeat center top;
+  background-attachment:fixed;
+  background-size:cover;
+  min-height:100px;
+}
 .banner{
 	background:url(../images/banner.jpg) no-repeat center top;
 	background-attachment:fixed;
@@ -1901,3 +1906,4 @@ textarea:focus, input:focus, select:focus, .bootstrap-select .dropdown-toggle:fo
 .vivid-yellow-bg{
 	background: #fdcb03;
 }
+
