@@ -218,8 +218,7 @@
 
 											</h3>
 											<br>
-											<p>Lorem ipsum dolor sit amet, consectetur adipiscing
-												elit. Nunc mollis eleifend dapibus.</p>
+											<p><%= a.getString("Description") %></p>
 										</div>
 
 										<label class="check-container"> <input type="checkbox"

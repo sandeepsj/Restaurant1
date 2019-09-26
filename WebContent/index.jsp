@@ -316,8 +316,7 @@
 												</div>
 											</div>
 											<br>
-											<p>Lorem ipsum dolor sit amet, consectetur adipiscing
-												elit. Nunc mollis eleifend dapibus.</p>
+											<p><%= a.getString("Description") %></p>
 										</div>
 										<span class="offer-price"><%= a.getString("Price") %></span>
 									</div>
