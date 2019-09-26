@@ -3,13 +3,22 @@
   <display-name>BeginnersBookDemo</display-name>
   <welcome-file-list>
     <welcome-file>index.jsp</welcome-file>
+    <welcome-file>todaysMenuEditor.jsp</welcome-file>
   </welcome-file-list>
   <servlet>
     <servlet-name>BookTable</servlet-name>
     <servlet-class>BookTable</servlet-class>
   </servlet>
+  <servlet>
+      <servlet-name>UpdateTodaysFoods</servlet-name>
+      <servlet-class>UpdateTodaysFoods</servlet-class>
+  </servlet>
   <servlet-mapping>
     <servlet-name>BookTable</servlet-name>
     <url-pattern>/BookTable</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+      <servlet-name>UpdateTodaysFoods</servlet-name>
+      <url-pattern>/UpdateTodaysFoods</url-pattern>
   </servlet-mapping>
 </web-app>
