@@ -9,16 +9,24 @@
     <servlet-name>BookTable</servlet-name>
     <servlet-class>BookTable</servlet-class>
   </servlet>
-  <servlet>
-      <servlet-name>UpdateTodaysFoods</servlet-name>
-      <servlet-class>UpdateTodaysFoods</servlet-class>
-  </servlet>
   <servlet-mapping>
     <servlet-name>BookTable</servlet-name>
     <url-pattern>/BookTable</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>UpdateTodaysFoods</servlet-name>
+    <servlet-class>UpdateTodaysFoods</servlet-class>
+  </servlet>
   <servlet-mapping>
-      <servlet-name>UpdateTodaysFoods</servlet-name>
-      <url-pattern>/UpdateTodaysFoods</url-pattern>
+    <servlet-name>UpdateTodaysFoods</servlet-name>
+    <url-pattern>/UpdateTodaysFoods</url-pattern>
+  </servlet-mapping>
+  <servlet>
+      <servlet-name>FoodTableEditor</servlet-name>
+      <servlet-class>FoodTableEditor</servlet-class>
+  </servlet>
+  <servlet-mapping>
+      <servlet-name>FoodTableEditor</servlet-name>
+      <url-pattern>/FoodTableEditor</url-pattern>
   </servlet-mapping>
 </web-app>

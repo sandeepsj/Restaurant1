@@ -3,6 +3,7 @@ package db;
 import java.sql.Blob;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Hashtable;
@@ -12,6 +13,7 @@ public class Foods extends RestaurantDB{
 	public ResultSet foods;
 	public Domain[] DomainTypes = Domain.values();
 	public int curDomain = -1;
+	public ResultSetMetaData foodMeta;
 	//Pricelist[n][m]; n = itemcode; m = price;
 	Hashtable<Integer,Float> PriceTable = new Hashtable<Integer,Float>();
 	//public ResultSet curDomainSet;
@@ -28,7 +30,8 @@ public class Foods extends RestaurantDB{
 		super();
 		Query = "SELECT * FROM FOODS;";
 		foods = DataRequest.executeQuery(Query);
-		no_of_columns = foods.getMetaData().getColumnCount();
+		foodMeta = foods.getMetaData();
+		no_of_columns = foodMeta.getColumnCount();
 		int i = 0;
 		while(foods.next()) {
 			PriceTable.put(foods.getInt("ItemCode"), foods.getFloat("Price"));

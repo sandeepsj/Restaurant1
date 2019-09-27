@@ -1,7 +1,7 @@
 <%@ page import="db.*"%>
 <%@ page import="java.sql.*"%>
 <%
-	Foods food = new Foods();
+    Foods food = new Foods();
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -101,7 +101,10 @@
 <!-- color -->
 <link id="changeable-colors" rel="stylesheet"
 	href="css/colors/strong-blue.css" />
-
+<!-- Bootstrap Core CSS -->
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<!-- DataTables CSS -->
+<link href="css/dataTables.bootstrap.css" rel="stylesheet">
 <!-- Modernizer -->
 <script src="js/modernizer.js"></script>
 
@@ -141,7 +144,7 @@
 								<ul class="nav navbar-nav navbar-right">
 									<li class="active"><a href="#banner">Home</a></li>
 									<li><a href="todaysMenuEditor.jsp">Today's Menu</a></li>
-									<li><a href="FoodTableEditor.jsp">Edit Food DB</a></li>
+									<li><a href="FoodTableEditor.jsp">Food Table</a></li>
 									<li><a href="#menu">Menu</a></li>
 									<li><a href="#menu">Menu</a></li>
 
@@ -164,105 +167,75 @@
 	</div>
 	<!-- end banner -->
 
-
-
-<form method = "post" action = "UpdateTodaysFoods">
-	<div id="menu" class="menu-main pad-top-100 pad-bottom-100">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-					<div class="wow fadeIn" data-wow-duration="1s"
-						data-wow-delay="0.1s">
-						<h2 class="block-title text-center">Today's Menu</h2>
-						<p class="title-caption text-center">Select items for today's Menu.<br>
-						You can check the items that are available for today and uncheck those are not.</p>
-					</div>
-					<div class="tab-menu">
-						<div class="slider slider-nav">
-							<div class="tab-title-menu">
-								<h2>STARTERS</h2>
-								<p>
-									<i class="flaticon-canape"></i>
-								</p>
-							</div>
-							<div class="tab-title-menu">
-								<h2>MAIN DISHES</h2>
-								<p>
-									<i class="flaticon-dinner"></i>
-								</p>
-							</div>
-							<div class="tab-title-menu">
-								<h2>DESERTS</h2>
-								<p>
-									<i class="flaticon-desert"></i>
-								</p>
-							</div>
-							<div class="tab-title-menu">
-								<h2>DRINKS</h2>
-								<p>
-									<i class="flaticon-coffee"></i>
-								</p>
-							</div>
+	<form method="post" action="FoodTableEditor" onSubmit="editedDomains()">
+		<div id="menu" class="menu-main pad-top-100 pad-bottom-100">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+						<div class="wow fadeIn" data-wow-duration="1s"
+							data-wow-delay="0.1s">
+							<h2 class="block-title text-center">Edit Food Database</h2>
+							<p class="title-caption text-center">You can add,delete or
+								edit a new Food item and its details.Double click on a field to
+								edit that value. Once a value is edited it is shown in red color</p>
 						</div>
-						
-							<div class="slider slider-single">
-								<%
-									while (food.nextDomain()) {
-										out.println("<div>");
-										ResultSet a = food.curDomain();
-										while (a.next()) {
-								%>
-								<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
-									<div class="offer-item">
-										<img src=" <%=a.getString("imagePath")%> " alt=""
-											class="img-responsive">
-										<div>
-											<h3><%=a.getString("FoodItemName").toUpperCase()%>
+						<div class="tab-menu">
+							<div class="panel-body">
+								<table width="100%"
+									class="table table-striped table-bordered table-hover"
+									id="dataTables-example">
+									<thead>
+										<tr id='tHeader'>
+											<% for (int i = 1; i<=food.no_of_columns;i++){ %>
+											<th><%=food.foodMeta.getColumnName(i) %></th>
+											<%} %>
+										</tr>
+									</thead>
+									<tbody>
+										<%
+										int i = 0;
+										while(food.foods.next()){
+											if(i == 0){
+                                    			out.println("<tr class='odd gradeX'>");
+                                    			i = 1;
+											}
+											else{
+												out.println("<tr class='even gradeC'>");
+												i = 0;
+											}
+                                    		for(int j = 1; j<=food.no_of_columns; j++){
+                                      			out.print("<td id = 'editor' contenteditable = 'True'>"+food.foods.getString(j)+"</td>");
+                                    		}
+                                    		out.println("</tr>");
+                                		} %>
 
-											</h3>
-											<br>
-											<p><%= a.getString("Description") %></p>
-										</div>
-
-										<label class="check-container"> <input type="checkbox"
-											<%if (food.isAvailableToday(a.getInt("itemCode")))
-						out.print("checked='checked'");%>
-											name = 'menu' value ='<%=a.getInt("itemCode")%>'> <span
-											class="checkmark"></span>
-										</label>
-										<!--span class="offer-price"a.getString("Price")e") %></span!-->
-									</div>
-								</div>
-								<!-- end col -->
-								<%
-									}
-										a.close();
-										out.println("</div>");
-									}
-								%>
+									</tbody>
+								</table>
+								<!-- /.table-responsive -->
 							</div>
-						
+
+						</div>
 					</div>
+					<!-- end tab-menu -->
 				</div>
-				<!-- end tab-menu -->
+				<!-- end col -->
 			</div>
-			<!-- end col -->
+			<!-- end row -->
 		</div>
-		<!-- end row -->
-	</div>
-	<!-- end container -->
-	<div id="reservation"
-		class="reservations-main pad-top-100 pad-bottom-100">
-		<div class="reserve-book-btn text-center">
-			<button class="hvr-underline-from-center" type="submit" value="SEND"
-				id="submit">UPDATE TODAY'S MENU</button>
-		</div>
+		<input id="editedString" type="hidden" name = "editString"></input>
 		<!-- end container -->
-	</div>
-	<!-- end reservations-main -->
-	</div>
-	<!-- end menu -->
-</form>
+		<div id="reservation"
+			class="reservations-main pad-top-100 pad-bottom-100">
+			<div class="reserve-book-btn text-center">
+				<button class="hvr-underline-from-center" type="submit" value="SEND"
+					id="submit">UPDATE FOOD DATABASE</button>
+			</div>
+			<!-- end container -->
+		</div>
+		<!-- end reservations-main -->
+		</div>
+		<!-- end menu -->
+	</form>
 
 
 	<div id="footer" class="footer-main">
@@ -405,6 +378,78 @@
 	<script src="js/bootstrap.min.js"></script>
 	<!-- ALL PLUGINS -->
 	<script src="js/custom.js"></script>
+	<script src="js/jquery.min.js"></script>
+	<script src="js/jquery.dataTables.min.js"></script>
+	<script src="js/dataTables.bootstrap.min.js"></script>
+
+
+	<!-- Page-Level Demo Scripts - Tables - Use for reference -->
+	<script>
+    var editedArr = [];
+    var editedDict = new Object();
+    var rowMap = new Object();
+    var table = document.getElementById("dataTables-example");
+    for (var i = 1; i < table.rows.length; i++){
+    	rowMap[table.rows[i].cells[0].innerHTML] = i; //itemCode maps to the corresponding row index
+    }
+    function editedDomains(){
+    	var editedSet = new Set(editedArr);
+    	var i = 0;
+    	var thArray = [];
+    	$('#tHeader > th').each(function(){
+    		thArray.push($(this).text())
+    	})
+    	var editedObj = {}
+		var j = 0;
+		for (j = 0; j < thArray.length; j++){
+			editedObj[thArray[j]] = "~";
+		}
+    	var keyArr = Object.keys(editedDict);
+    	var editedTable = new Object();
+    	for (i = 0; i < keyArr.length; i++){
+    		editedDict[keyArr[i]] =Array.from(new Set(editedDict[keyArr[i]])); 
+    		for (j = 0 ; j < editedDict[keyArr[i]].length ; j++){
+    			var col = editedDict[keyArr[i]][j];
+    			var value = document.getElementById("dataTables-example").rows[rowMap[keyArr[i]]].cells[col].innerHTML;
+    			if(editedTable[keyArr[i]] != undefined){
+    				editedTable[keyArr[i]][thArray[col]] = value;
+    			}
+    			else{
+	    			var tmpObj = new Object();
+    				tmpObj[thArray[col]] = value;
+    				editedTable[keyArr[i]] = tmpObj; 
+    			}
+    		}
+    	}
+    	document.getElementById('editedString').value = JSON.stringify(editedTable);
+    }
+    $(document).ready(function() {
+        $('#dataTables-example').DataTable({
+            responsive: true
+        });
+        $('td').on('dblclick', function() {
+        	this.style.color = 'red';
+        	var key = document.getElementById("dataTables-example").rows[this.parentNode.rowIndex].cells[0].innerHTML;
+        	if(editedDict[key] != undefined){
+        		editedDict[key].push(this.cellIndex);
+        	}
+        	else{
+        		editedDict[key] = [this.cellIndex]
+        	}
+            var $this = $(this);
+            var $input = $('<input>', {
+                value: $this.text(),
+                type: 'text',
+                blur: function() {
+                   $this.text(this.value);
+                },
+                keyup: function(e) {
+                   if (e.which === 13) $input.blur();
+                }
+            }).appendTo( $this.empty() ).focus();
+        });
+    });
+    </script>
 </body>
 
 </html>
