@@ -3,6 +3,7 @@
 import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import db.Foods;
+import tools.JSON;
 
 /**
  * Servlet implementation class FoodTableEditor
@@ -44,13 +46,16 @@ public class FoodTableEditor extends HttpServlet {
 		// TODO Auto-generated method stub
 		try {
 			Foods foods = new Foods();
-			System.out.println(request.getParameter("editString"));
 			editedTable = request.getParameter("editString");
+			List<String> upQueries = new JSON(editedTable).StrToUpdateQueries();
+			for (String querie: upQueries) {
+				foods.UpdateQuerie(querie);
+			}
 		} catch (ClassNotFoundException | SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		doGet(request, response);
 	}
 

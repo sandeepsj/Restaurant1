@@ -1,6 +1,9 @@
 package tools;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
+import java.util.Scanner;
 import java.util.StringTokenizer;
 
 public class JSON {
@@ -9,14 +12,35 @@ public class JSON {
 	public JSON (String jsonStr) {
 		JSONstr = jsonStr;
 	}
-	public Hashtable<Integer, Hashtable<String, String>> StrToHashTable(){
+	
+	public List<String> StrToUpdateQueries(){
 		String jsonTemp = JSONstr.substring(1, JSONstr.length());
-		StringTokenizer st = new StringTokenizer(jsonTemp,",");
+		jsonTemp = jsonTemp.substring(1, jsonTemp.length());
+		StringTokenizer st = new StringTokenizer(jsonTemp,"}");
+		List<String> QuerieSet = new ArrayList<String>();
 		while(st.hasMoreTokens()) {
-			StringTokenizer st1 = new StringTokenizer(st.nextToken(),":");
-			int itemCode = Integer.parseInt(st1.nextToken());
-			StringTokenizer st2 = new StringTokenizer(st1.nextToken());
+			String querie;
+			querie = "UPDATE FOODS SET ";
+			String row = st.nextToken();
+			StringTokenizer st1 = new StringTokenizer(row, "{");
+			String itemCode = st1.nextToken().replaceAll("\"|,|:","");
+			String update = st1.nextToken().replaceAll("\"","");
+			StringTokenizer st2 = new StringTokenizer(update, ",");
+			int i = 0;
+			while(st2.hasMoreTokens()) {
+				if (i != 0)
+					querie += ", ";
+				else
+					i = 1;
+				StringTokenizer temp = new StringTokenizer(st2.nextToken(),":");
+				String attr = temp.nextToken();
+				String domain = temp.nextToken();
+				querie += attr+ " = ";
+				querie += "\""+domain+"\" ";
+			}
+			querie += "WHERE ITEMCODE = "+itemCode + ";";
+			QuerieSet.add(querie);
 		}
-		return JSONHash;
+		return QuerieSet;
 	}
 }

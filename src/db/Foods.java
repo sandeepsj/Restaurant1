@@ -40,7 +40,12 @@ public class Foods extends RestaurantDB{
 		foods.previous();
 		//Setting Domain count
 	}
-
+	public void ExceptionQuerie(String querie) throws SQLException {
+		DataRequest.executeQuery(querie);
+	}
+	public void UpdateQuerie(String querie) throws SQLException {
+		DataRequest.executeUpdate(querie);
+	}
 	public ResultSet selectAll() throws SQLException {
 		Refresh();
 		return foods;
