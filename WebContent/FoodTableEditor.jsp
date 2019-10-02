@@ -177,7 +177,8 @@
 							<h2 class="block-title text-center">Edit Food Database</h2>
 							<p class="title-caption text-center">You can add,delete or
 								edit a new Food item and its details.Double click on a field to
-								edit that value. Once a value is edited it is shown in red color</p>
+								edit that value. Once a value is edited it is shown in red color.
+								<br>Note:The possible choices for Food Domains are STARTERS MAIN_DISHES DESERTS and DRINKS</p>
 						</div>
 						<div class="tab-menu">
 							<div class="panel-body">
@@ -192,6 +193,20 @@
 										</tr>
 									</thead>
 									<tbody>
+										<tr>
+											<td id = 'editor' contenteditable = 'True'>
+                              					<p>0</p>
+                              				</td>
+											<%
+											
+											for(int j = 2; j<=food.no_of_columns; j++){%>
+                                      			<td id = 'editor' contenteditable = 'True'>
+                                      				...
+                                      			</td>
+                                      			<%
+                                    		}
+                                    		%>
+										</tr>
 										<%
 										int i = 0;
 										while(food.foods.next()){
@@ -208,7 +223,6 @@
                                     		}
                                     		out.println("</tr>");
                                 		} %>
-
 									</tbody>
 								</table>
 								<!-- /.table-responsive -->
@@ -424,6 +438,12 @@
     	document.getElementById('editedString').value = JSON.stringify(editedTable);
     }
     $(document).ready(function() {
+    	$(window).keydown(function(event){
+    	    if(event.keyCode == 13) {
+    	      event.preventDefault();
+    	      return false;
+    	    }
+    	  });
         $('#dataTables-example').DataTable({
             responsive: true
         });
