@@ -7,10 +7,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class RestaurantDB {
-	ResultSet result;
-	Statement DataRequest;
-	Connection conn;
-	String Query;
+	public ResultSet result;
+	public Statement DataRequest;
+	public Connection conn;
+	public String Query;
 	public int no_of_tables;
 	public RestaurantDB() throws ClassNotFoundException, SQLException {
 		no_of_tables = 18;

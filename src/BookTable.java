@@ -13,7 +13,7 @@ import db.Foods;
 import db.TodaysOrders;
 
 @WebServlet("/BookTable")
-public class BookTable extends HttpServlet {
+public class BookTable extends HttpServlet{
 	public int TableNo;
 	public String Name;
 	//itemDetails[0] = itemCode ; itemDetails[1] = Number of orders;
@@ -49,7 +49,6 @@ public class BookTable extends HttpServlet {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		System.out.println(TableNo+Name);
 		doGet(request, response);
 	}
 

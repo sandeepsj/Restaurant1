@@ -1,8 +1,43 @@
 <html>
 <body>
-<form action="index.jsp">
+<!--<form action="index.jsp">-->
+	<script type="text/javascript"
+	src="js/jquery.min.js"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+	$('.increment').on('click', function(){
+		var name = this.getAttribute("name");
+		
+		var val = document.getElementById(name).value;
+		document.getElementById(name).value = Number(val)+1;
+	});
+	$('.decrement').on('click', function(){
+		var name = this.getAttribute("name");
+		console.log(name);
+		var val = document.getElementById(name).value;
+		document.getElementById(name).value = Number(val)-1;
+	});
+});
+</script>
+<style type="text/css">
+	.decrement
+	{
+		text-decoration: none;
+		background-color: Orange;
+		color: #333333;
+		padding: 2px 6px 2px 6px;
+		border-radius: 8px;
+	}
+	.input-number
+	{
+		width: 200px;
+	}
+</style>
 <input type = "text" placeholder = "here">
-<button type="submit">adf</button>
+<button type="submit">adf</button><br><br>
+<span class = "decrement" name = "san">-sdfsdf</span>
+<input width = "10px" class="input-number" type="number" value="0" min="0" max="1000"  id = "san">
+<span class = "increment"  name = "san">+</span>
 </form>
 </body>
 </html>

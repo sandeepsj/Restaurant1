@@ -35,7 +35,7 @@
 <link id="changeable-colors" rel="stylesheet"
 	href="css/colors/orange.css" />
 <script type="text/javascript"
-	src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+	src="js/jquery.min.js"></script>
 
 <!-- Modernizer -->
 <script src="js/modernizer.js"></script>
@@ -44,6 +44,30 @@
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 <style type="text/css">
+.decrement,.increment
+	{
+		cursor:pointer;
+		text-decoration: none;
+		background-color: #bbbbbb;
+		color: #333333;
+		padding: 2px 6px 2px 6px;
+		border-radius: 4px;
+		height: 22px;
+	}
+
+.input-number
+	{
+	text-align: center;
+	border-radius: 4px;
+  
+		width: 33px;
+	height: 22px;
+    position: relative;
+    border: 2px solid #cdcdcd;
+    border-color: rgba(0, 0, 0, .14);
+    background-color: AliceBlue;
+    font-size: 14px;
+	}
 .input-number-group {
 	display: -webkit-flex;
 	display: -ms-flexbox;
@@ -106,7 +130,21 @@
 }
 </style>
 <script type="text/javascript">
-        $('.input-number-increment').click(function() {
+	$(document).ready(function() {
+		$('.increment').on('click', function(){
+			var name = this.getAttribute("name");
+			
+			var val = document.getElementById(name).value;
+			document.getElementById(name).value = Number(val)+1;
+		});
+		$('.decrement').on('click', function(){
+			var name = this.getAttribute("name");
+			console.log(name);
+			var val = document.getElementById(name).value;
+			document.getElementById(name).value = Number(val)-1;
+		});
+	});
+        /* $('.input-number-increment').click(function() {
           var $input = $(this).parents('.input-number-group').find('.input-number');
           var val = parseInt($input.val(), 10);
           $input.val(val + 1);
@@ -116,7 +154,7 @@
           var $input = $(this).parents('.input-number-group').find('.input-number');
           var val = parseInt($input.val(), 10);
           $input.val(val - 1);
-        })
+        })*/
 
 
     </script>
@@ -305,7 +343,10 @@
 											<h3><%= a.getString("FoodItemName").toUpperCase() %>
 
 											</h3>
-											<div class="input-group input-number-group">
+											<span class = "decrement" name = "<%= a.getInt("itemCode") %>">-</span>
+											<input class="input-number" id = "<%= a.getInt("itemCode") %>" type="number" value="0" min="0" max="1000" name="<%= a.getInt("itemCode") %>">
+											<span class = "increment" name = "<%= a.getInt("itemCode") %>">+</span>
+											<!--<div class="input-group input-number-group">
 												<div class="input-group-button">
 													<span class="input-number-decrement">-</span>
 												</div>
@@ -315,6 +356,7 @@
 													<span class="input-number-increment">+</span>
 												</div>
 											</div>
+											-->
 											<br>
 											<p><%= a.getString("Description") %></p>
 										</div>

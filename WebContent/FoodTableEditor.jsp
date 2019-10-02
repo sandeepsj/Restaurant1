@@ -222,7 +222,7 @@
 			</div>
 			<!-- end row -->
 		</div>
-		<input id="editedString" type="hidden" name = "editString"></input>
+		<input id="editedString" type="hidden" name="editString"></input>
 		<!-- end container -->
 		<div id="reservation"
 			class="reservations-main pad-top-100 pad-bottom-100">
@@ -428,7 +428,7 @@
             responsive: true
         });
         $('td').on('dblclick', function() {
-        	this.style.color = 'red';
+        	
         	var key = document.getElementById("dataTables-example").rows[this.parentNode.rowIndex].cells[0].innerHTML;
         	if(editedDict[key] != undefined){
         		editedDict[key].push(this.cellIndex);
@@ -436,17 +436,23 @@
         	else{
         		editedDict[key] = [this.cellIndex]
         	}
-            var $this = $(this);
-            var $input = $('<input>', {
-                value: $this.text(),
-                type: 'text',
-                blur: function() {
-                   $this.text(this.value);
-                },
-                keyup: function(e) {
-                   if (e.which === 13) $input.blur();
-                }
-            }).appendTo( $this.empty() ).focus();
+        	if(this.cellIndex != 0){
+        		this.style.color = 'red';
+            	var $this = $(this);
+            	var $input = $('<input>', {
+	                value: $this.text(),
+                	type: 'text',
+                	blur: function() {
+                   		$this.text(this.value);
+                	},
+                	keyup: function(e) {
+                		if (e.which === 13) $input.blur();
+            		}
+            	}).appendTo( $this.empty() ).focus();
+        	}
+        	else{
+        		alert("You cannot edit itemCode!!Sorry");
+        	}
         });
     });
     </script>
