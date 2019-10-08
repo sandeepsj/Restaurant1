@@ -29,4 +29,20 @@
       <servlet-name>FoodTableEditor</servlet-name>
       <url-pattern>/FoodTableEditor</url-pattern>
   </servlet-mapping>
+  <servlet>
+      <servlet-name>AddItem</servlet-name>
+      <servlet-class>AddItem</servlet-class>
+  </servlet>
+  <servlet-mapping>
+      <servlet-name>AddItem</servlet-name>
+      <url-pattern>/AddItem</url-pattern>
+  </servlet-mapping>
+  <servlet>
+      <servlet-name>DeleteRow</servlet-name>
+      <servlet-class>DeleteRow</servlet-class>
+  </servlet>
+  <servlet-mapping>
+      <servlet-name>DeleteRow</servlet-name>
+      <url-pattern>/DeleteRow</url-pattern>
+  </servlet-mapping>
 </web-app>

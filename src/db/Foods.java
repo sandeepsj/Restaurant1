@@ -14,6 +14,7 @@ public class Foods extends RestaurantDB{
 	public Domain[] DomainTypes = Domain.values();
 	public int curDomain = -1;
 	public ResultSetMetaData foodMeta;
+	public int nextItemCode;
 	//Pricelist[n][m]; n = itemcode; m = price;
 	Hashtable<Integer,Float> PriceTable = new Hashtable<Integer,Float>();
 	//public ResultSet curDomainSet;
@@ -28,6 +29,10 @@ public class Foods extends RestaurantDB{
 	
 	public Foods() throws ClassNotFoundException, SQLException {
 		super();
+		ResultSet r = DataRequest.executeQuery("SELECT MAX(itemCode) from Foods");
+		r.next();
+		nextItemCode = r.getInt(1)+1;
+		r.close();
 		Query = "SELECT * FROM FOODS;";
 		foods = DataRequest.executeQuery(Query);
 		foodMeta = foods.getMetaData();
@@ -38,13 +43,14 @@ public class Foods extends RestaurantDB{
 		}
 		foods.first();
 		foods.previous();
+		
 		//Setting Domain count
 	}
-	public void ExceptionQuerie(String querie) throws SQLException {
-		DataRequest.executeQuery(querie);
+	public void ExceptionQuerie(String query) throws SQLException {
+		DataRequest.executeQuery(query);
 	}
-	public void UpdateQuerie(String querie) throws SQLException {
-		DataRequest.executeUpdate(querie);
+	public void UpdateQuerie(String query) throws SQLException {
+		DataRequest.executeUpdate(query);
 	}
 	public ResultSet selectAll() throws SQLException {
 		Refresh();
@@ -68,6 +74,13 @@ public class Foods extends RestaurantDB{
 		Query = "SELECT * FROM FOODS where foodDomain = '"+ domain+"';";
 		return conn.createStatement().executeQuery(Query);
 	}
+	
+	public void deleteRow(int ItemCode) throws SQLException {
+		Query = "DELETE from foods where itemCode = " + ItemCode;
+		conn.createStatement().executeUpdate(Query);
+		Query = "DELETE from todays_menu where itemCode = " + ItemCode;
+		conn.createStatement().executeUpdate(Query);
+	}
 	/*}
 		Domain[] Domains = Domain.values();
 		Groups = new ResultSet[Domains.length];
@@ -82,22 +95,30 @@ public class Foods extends RestaurantDB{
 		insertStatement.setInt(1, row[0].getClass());
 	}*/
 
-	public void insertRow(int itemCode, String FoodItemName, String FoodDomain, float Price, int Rating, Blob image) throws SQLException {
+	public void insertRow(int itemCode, String FoodItemName, String FoodDomain, float Price, int Rating, String image,String description) throws SQLException {
 		PreparedStatement insertStatement;
 		//Preparing insert statement
 		String qns = "";
-		for (int i = 0;i < no_of_columns;i++)
+		for (int i = 0;i < no_of_columns-1;i++)
 			qns += "?,";
+		qns += "?";
 		Query = "INSERT INTO FOODS VALUES("+qns+")";
 		insertStatement = conn.prepareStatement(Query);
-
+		/*Query = "INSERT INTO FOODS VALUES(";
+		Query += itemCode + "," + FoodItemName + "," + FoodDomain + "," + Price + "," + Rating + "," + image + "," + description;
+		Query += ")";
+		System.out.println(Query);
+		DataRequest.executeUpdate(Query);*/
+		
 		insertStatement.setInt(1, itemCode);
 		insertStatement.setString(2, FoodItemName);
 		insertStatement.setString(3, FoodDomain);
 		insertStatement.setFloat(4, Price);
 		insertStatement.setInt(5, Rating);
-		insertStatement.setBlob(6, image);
+		insertStatement.setString(6, image);
+		insertStatement.setString(7, description);
 		insertStatement.executeUpdate();
+		DataRequest.executeUpdate("Insert into Todays_menu values("+itemCode+",0)");
 		Refresh();
 	}
 	public int[] AvailableToday() throws SQLException {

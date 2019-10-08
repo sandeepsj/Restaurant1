@@ -2,18 +2,43 @@ package tools;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Scanner;
 import java.util.StringTokenizer;
-
+import org.json.*;
 public class JSON {
 	String JSONstr;
 	Hashtable<Integer, Hashtable<String, String>> JSONHash;
 	public JSON (String jsonStr) {
 		JSONstr = jsonStr;
 	}
+	public List<String> StrToUpdateQueries() throws JSONException{
+		JSONObject eg = new JSONObject(JSONstr);
+		Iterator<String> itemCodeItr = eg.keys();
+		List<String> QuerieSet = new ArrayList<String>();
+		while(itemCodeItr.hasNext()) {
+			String query = "UPDATE FOODS SET ";
+			String itemCode = itemCodeItr.next();
+			JSONObject eg1 = new JSONObject(eg.getString(itemCode));
+			Iterator<String> domainsItr = eg1.keys();
+			int i = 0;
+			while(domainsItr.hasNext()) {
+				if (i != 0)
+					query += ", ";
+				else
+					i = 1;
+				String attr = domainsItr.next();
+				String domain = eg1.getString(attr);
+				query += attr+ " = ";
+				query += "\""+domain+"\" ";
+			}
+			query += "WHERE ITEMCODE = "+itemCode + ";";
+			QuerieSet.add(query);
+		}
+		return QuerieSet;
+	}
 	
-	public List<String> StrToUpdateQueries(){
+	/*public List<String> StrTooUpdateQueries(){
 		String jsonTemp = JSONstr.substring(1, JSONstr.length());
 		jsonTemp = jsonTemp.substring(1, jsonTemp.length());
 		StringTokenizer st = new StringTokenizer(jsonTemp,"}");
@@ -35,6 +60,7 @@ public class JSON {
 				StringTokenizer temp = new StringTokenizer(st2.nextToken(),":");
 				String attr = temp.nextToken();
 				String domain = temp.nextToken();
+				System.out.println(domain);
 				querie += attr+ " = ";
 				querie += "\""+domain+"\" ";
 			}
@@ -42,5 +68,5 @@ public class JSON {
 			QuerieSet.add(querie);
 		}
 		return QuerieSet;
-	}
+	}*/
 }

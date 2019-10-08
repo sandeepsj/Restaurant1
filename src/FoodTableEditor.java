@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.JSONException;
+
 import db.Foods;
 import tools.JSON;
 
@@ -35,8 +37,8 @@ public class FoodTableEditor extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath()+"\n");
-		response.getWriter().append(editedTable);
+		
+		response.sendRedirect("FoodTableEditor.jsp");
 	}
 
 	/**
@@ -48,10 +50,13 @@ public class FoodTableEditor extends HttpServlet {
 			Foods foods = new Foods();
 			editedTable = request.getParameter("editString");
 			List<String> upQueries = new JSON(editedTable).StrToUpdateQueries();
-			for (String querie: upQueries) {
-				foods.UpdateQuerie(querie);
+			for (String query: upQueries) {
+				foods.UpdateQuerie(query);
 			}
 		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

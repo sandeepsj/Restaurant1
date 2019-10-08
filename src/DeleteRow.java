@@ -10,44 +10,45 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import db.Foods;
-import db.TodaysOrders;
 
-@WebServlet("/BookTable")
-public class BookTable extends HttpServlet{
-	public int TableNo;
-	public String Name;
-	//itemDetails[0] = itemCode ; itemDetails[1] = Number of orders;
-	public int[][] itemDetails;
+/**
+ * Servlet implementation class DeleteRow
+ */
+@WebServlet("/DeleteRow")
+public class DeleteRow extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-    public BookTable() {
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public DeleteRow() {
         super();
         // TODO Auto-generated constructor stub
     }
 
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		response.getWriter().append("Served at: ").append(request.getContextPath());
-		response.sendRedirect("index.jsp");
+		response.sendRedirect("FoodTableEditor.jsp");
 	}
-	
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		TableNo = Integer.parseInt(request.getParameter("table_no"));
-		Name = request.getParameter("form_name");
+		
 		try {
 			Foods food = new Foods();
-			int FoodsArray[] = food.AvailableToday();
-			itemDetails = new int[FoodsArray.length][2];
-			for (int i =0 ; i<FoodsArray.length; i++) {
-				itemDetails[i][0] = FoodsArray[i];
-				itemDetails[i][1] = Integer.parseInt(request.getParameter(String.valueOf(FoodsArray[i])));
-			}
-			TodaysOrders TodaysFood = new TodaysOrders();
-			TodaysFood.Insert(TableNo, Name, itemDetails);
-		} catch (ClassNotFoundException e) {
+			food.deleteRow(Integer.parseInt(request.getParameter("itemCode")));
+		} catch (NumberFormatException | SQLException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (SQLException e) {
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		doGet(request, response);

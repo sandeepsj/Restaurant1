@@ -1,6 +1,7 @@
 <%@ page import="db.*"%>
 <%@ page import="java.sql.*"%>
 <%
+
     Foods food = new Foods();
 %>
 <!DOCTYPE html>
@@ -9,6 +10,9 @@
 <head>
 <style type="text/css">
 /* Customize the label (the container) */
+.trash{
+	cursor:pointer;
+}
 .check-container {
 	display: block;
 	position: relative;
@@ -175,10 +179,13 @@
 						<div class="wow fadeIn" data-wow-duration="1s"
 							data-wow-delay="0.1s">
 							<h2 class="block-title text-center">Edit Food Database</h2>
-							<p class="title-caption text-center">You can add,delete or
-								edit a new Food item and its details.Double click on a field to
-								edit that value. Once a value is edited it is shown in red color.
-								<br>Note:The possible choices for Food Domains are STARTERS MAIN_DISHES DESERTS and DRINKS</p>
+							<p class="title-caption text-center">
+								You can add,delete or edit a new Food item and its
+								details.Double click on a field to edit that value. Once a value
+								is edited it is shown in red color. <br>Note:The possible
+								choices for Food Domains are STARTERS MAIN_DISHES DESERTS and
+								DRINKS
+							</p>
 						</div>
 						<div class="tab-menu">
 							<div class="panel-body">
@@ -190,23 +197,11 @@
 											<% for (int i = 1; i<=food.no_of_columns;i++){ %>
 											<th><%=food.foodMeta.getColumnName(i) %></th>
 											<%} %>
+											<th></th>
 										</tr>
 									</thead>
 									<tbody>
-										<tr>
-											<td id = 'editor' contenteditable = 'True'>
-                              					<p>0</p>
-                              				</td>
-											<%
-											
-											for(int j = 2; j<=food.no_of_columns; j++){%>
-                                      			<td id = 'editor' contenteditable = 'True'>
-                                      				...
-                                      			</td>
-                                      			<%
-                                    		}
-                                    		%>
-										</tr>
+
 										<%
 										int i = 0;
 										while(food.foods.next()){
@@ -220,8 +215,10 @@
 											}
                                     		for(int j = 1; j<=food.no_of_columns; j++){
                                       			out.print("<td id = 'editor' contenteditable = 'True'>"+food.foods.getString(j)+"</td>");
-                                    		}
-                                    		out.println("</tr>");
+                                    		} %>
+										<td class = "trash"><span class="glyphicon glyphicon-trash"></span></td>
+										</tr>
+										<%
                                 		} %>
 									</tbody>
 								</table>
@@ -250,7 +247,79 @@
 		</div>
 		<!-- end menu -->
 	</form>
+	<br>
+	<br>
+	<div id="pricing" class="pricing-main pad-top-100 pad-bottom-100">
+		<div class="container">
+			<div class="row">
+				<div class="form-reservations-box">
+					<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+						<div class="wow fadeIn" data-wow-duration="1s"
+							data-wow-delay="0.1s">
+							<h2 class="block-title text-center">Add a Food Item</h2>
+						</div>
+						<h4 class="form-title">Fill the form to add a new food item.</h4>
+						<p>PLEASE FILL OUT ALL REQUIRED* FIELDS. THANKS!</p>
 
+						<form method="post" action="AddItem" name="contactform"
+							class="reservations-box" onsubmit="return add();">
+							<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+								<div class="form-box">
+									<input type="text" name="<%=food.foodMeta.getColumnName(1) %>"
+										id="<%=food.foodMeta.getColumnName(1) %>"
+										value="<%=food.nextItemCode %>" required="required"
+										data-error="Firstname is required.">
+								</div>
+							</div>
+							<% for (int j = 2; j<=food.no_of_columns;j++){ 
+                        		String colName = food.foodMeta.getColumnName(j); 
+                        		if(colName.equals("FoodDomain")){
+                        	%>
+							<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+								<div class="form-box">
+									<select name="FoodDomain" id="FoodDomain" class="selectpicker">
+										<option selected disabled><%=colName %></option>
+										<%for(int k = 0 ;k<food.DomainTypes.length; k++){ %>
+										<option><%=food.DomainTypes[k] %></option>
+										<%}; %>
+
+									</select>
+								</div>
+							</div>
+							<%}else{%>
+							<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+								<div class="form-box">
+									<input type="text" name="<%=colName %>" id="<%=colName %>"
+										placeholder="<%=colName %>" required="required"
+										data-error="Firstname is required.">
+								</div>
+							</div>
+
+							<%}} %>
+							<!-- end col -->
+
+							<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+								<div id="reservation"
+									class="reservations-main pad-top-100 pad-bottom-100">
+									<div class="reserve-book-btn text-center">
+										<button class="hvr-underline-from-center" type="submit"
+											value="SEND" id="submit">Add The Item</button>
+									</div>
+									<!-- end container -->
+								</div>
+							</div>
+						</form>
+						<!-- end form -->
+					</div>
+					<!-- end col -->
+				</div>
+			</div>
+			<!-- end row -->
+		</div>
+		<!-- end container -->
+	</div>
+	<!-- end pricing-main -->
+	<div id="hidden_form_container" style="display:none;"></div>
 
 	<div id="footer" class="footer-main">
 		<div class="footer-box pad-top-70">
@@ -399,10 +468,12 @@
 
 	<!-- Page-Level Demo Scripts - Tables - Use for reference -->
 	<script>
+	
     var editedArr = [];
     var editedDict = new Object();
     var rowMap = new Object();
     var table = document.getElementById("dataTables-example");
+    var NoOfCols = table.rows[0].cells.length
     for (var i = 1; i < table.rows.length; i++){
     	rowMap[table.rows[i].cells[0].innerHTML] = i; //itemCode maps to the corresponding row index
     }
@@ -445,7 +516,30 @@
     	    }
     	  });
         $('#dataTables-example').DataTable({
-            responsive: true
+            responsive: true,
+            searching: false,
+            paging: false 
+        });
+        $('.trash').on('click', function() {
+        	var key = table.rows[this.parentNode.rowIndex].cells[0].innerHTML;
+        	if (confirm("Are you sure to delete Entry itemCode = "+key)) {
+        	  var theForm, newInput1;
+        	  // Start by creating a <form>
+        	  theForm = document.createElement('form');
+        	  theForm.action = 'DeleteRow';
+        	  theForm.method = 'post';
+        	  // Next create the <input>s in the form and give them names and values
+        	  newInput1 = document.createElement('input');
+        	  newInput1.type = 'hidden';
+        	  newInput1.name = 'itemCode';
+        	  newInput1.value = key;
+        	  // Now put everything together...
+        	  theForm.appendChild(newInput1);
+        	  // ...and it to the DOM...
+        	  document.getElementById('hidden_form_container').appendChild(theForm);
+        	  // ...and submit it
+        	  theForm.submit();
+        	}
         });
         $('td').on('dblclick', function() {
         	
@@ -456,7 +550,7 @@
         	else{
         		editedDict[key] = [this.cellIndex]
         	}
-        	if(this.cellIndex != 0){
+        	if(this.cellIndex != 0 && this.cellIndex != NoOfCols - 1){
         		this.style.color = 'red';
             	var $this = $(this);
             	var $input = $('<input>', {
@@ -470,9 +564,10 @@
             		}
             	}).appendTo( $this.empty() ).focus();
         	}
-        	else{
+        	else if(this.cellIndex != NoOfCols - 1){
         		alert("You cannot edit itemCode!!Sorry");
         	}
+        	
         });
     });
     </script>
