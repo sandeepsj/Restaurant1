@@ -2,6 +2,7 @@
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.StringTokenizer;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,8 +15,9 @@ import db.TodaysOrders;
 
 @WebServlet("/BookTable")
 public class BookTable extends HttpServlet{
-	public int TableNo;
-	public String Name;
+	public int TableNo, orderid;
+	public String Name,Orders;
+	public float TotalAmount;
 	//itemDetails[0] = itemCode ; itemDetails[1] = Number of orders;
 	public int[][] itemDetails;
 	private static final long serialVersionUID = 1L;
@@ -28,7 +30,8 @@ public class BookTable extends HttpServlet{
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		response.getWriter().append("Served at: ").append(request.getContextPath());
-		response.sendRedirect("index.jsp");
+		String url = "orderSummery.jsp?Orders=" + Orders + "&TotalAmount=" + TotalAmount + "&OrderId=" + orderid;
+		response.sendRedirect(url);
 	}
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -44,7 +47,11 @@ public class BookTable extends HttpServlet{
 				itemDetails[i][1] = Integer.parseInt(request.getParameter(String.valueOf(FoodsArray[i])));
 			}
 			TodaysOrders TodaysFood = new TodaysOrders();
-			TodaysFood.Insert(TableNo, Name, itemDetails);
+			String orders = TodaysFood.Insert(TableNo, Name, itemDetails);
+			StringTokenizer st = new StringTokenizer(orders,"$");
+			orderid = Integer.parseInt(st.nextToken());
+			Orders = st.nextToken();
+			TotalAmount = TodaysFood.TotalAmount(Orders);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
@@ -52,5 +59,4 @@ public class BookTable extends HttpServlet{
 		}
 		doGet(request, response);
 	}
-
 }

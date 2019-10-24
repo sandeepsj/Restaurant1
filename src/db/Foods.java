@@ -26,7 +26,14 @@ public class Foods extends RestaurantDB{
 		public int Rating;
 		public Blob image;
 	}*/
-	
+	public Foods(int a) throws ClassNotFoundException, SQLException {
+		Query = "SELECT * FROM FOODS;";
+		foods = DataRequest.executeQuery(Query);
+		while(foods.next()) {
+			PriceTable.put(foods.getInt("ItemCode"), foods.getFloat("Price"));
+		}
+		foods.close();
+	}
 	public Foods() throws ClassNotFoundException, SQLException {
 		super();
 		ResultSet r = DataRequest.executeQuery("SELECT MAX(itemCode) from Foods");
@@ -46,8 +53,8 @@ public class Foods extends RestaurantDB{
 		
 		//Setting Domain count
 	}
-	public void ExceptionQuerie(String query) throws SQLException {
-		DataRequest.executeQuery(query);
+	public ResultSet ExecuteQuerie(String query) throws SQLException {
+		return DataRequest.executeQuery(query);
 	}
 	public void UpdateQuerie(String query) throws SQLException {
 		DataRequest.executeUpdate(query);

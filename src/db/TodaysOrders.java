@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 import javax.servlet.ServletException;
@@ -11,6 +12,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class TodaysOrders extends RestaurantDB{
+	public class OpenOrderDetails{
+		public ArrayList<ArrayList<String>> openorders = new ArrayList<ArrayList<String>>();
+		public ArrayList<String> Name = new ArrayList<String>();
+		public ArrayList<Float> TotalAmount = new ArrayList<Float>();
+		public ArrayList<Integer> TableNo = new ArrayList<Integer>();
+		public ArrayList<Integer> OrderId = new ArrayList<Integer>();
+	}
 	public int no_of_columns;
 	public ResultSet todaysOrders;
 	public int totalAmount;
@@ -21,31 +29,95 @@ public class TodaysOrders extends RestaurantDB{
 		no_of_columns = todaysOrders.getMetaData().getColumnCount();
 	}
 	
-	public void Insert(int TableNo, String Name, int[][] itemDetails) throws SQLException, ClassNotFoundException {
+	public void changeCurStatus(String Action, int OrderId) throws SQLException {
+		String sql = "UPDATE todays_orders set cur_Status = ";
+		if(Action.compareTo("Close") == 0) {
+			sql += "\"CLOSED\" ";
+		}
+		else if(Action.compareTo("Reject") == 0) {
+			sql += "\"CANCELLED\" ";
+		}
+		sql += "WHERE orderID = "+OrderId;
+		DataRequest.executeUpdate(sql);
+	}
+	
+	public OpenOrderDetails OpenOrders() throws ClassNotFoundException, SQLException {
+		OpenOrderDetails OpenOrder = new OpenOrderDetails();
+		int i = 0;
+		String sql = "Select * from todays_orders where cur_Status = 'OPEN'";
+		ResultSet OpenOrders = DataRequest.executeQuery(sql); 
+		while(OpenOrders.next()) {
+			OpenOrder.TotalAmount.add(OpenOrders.getFloat("Total_Amount"));
+			OpenOrder.TableNo.add(OpenOrders.getInt("table_no"));
+			OpenOrder.Name.add(OpenOrders.getString("Name_of_customer"));
+			OpenOrder.OrderId.add(OpenOrders.getInt("orderID"));
+			ArrayList<String> orderdetails = new ArrayList<String>();
+			orderdetails = orderDetails(OpenOrders.getString("order_list"));
+			OpenOrder.openorders.add(orderdetails);
+			
+		}
+		OpenOrders.close();
+		return OpenOrder;
+	}
+	
+	public OpenOrderDetails ClosedOrders() throws ClassNotFoundException, SQLException {
+		OpenOrderDetails OpenOrder = new OpenOrderDetails();
+		int i = 0;
+		String sql = "Select * from todays_orders where cur_Status = 'CLOSED'";
+		ResultSet OpenOrders = DataRequest.executeQuery(sql); 
+		while(OpenOrders.next()) {
+			OpenOrder.TotalAmount.add(OpenOrders.getFloat("Total_Amount"));
+			OpenOrder.TableNo.add(OpenOrders.getInt("table_no"));
+			OpenOrder.Name.add(OpenOrders.getString("Name_of_customer"));
+			OpenOrder.OrderId.add(OpenOrders.getInt("orderID"));
+			ArrayList<String> orderdetails = new ArrayList<String>();
+			orderdetails = orderDetails(OpenOrders.getString("order_list"));
+			OpenOrder.openorders.add(orderdetails);
+			
+		}
+		OpenOrders.close();
+		return OpenOrder;
+	}
+	
+	public OpenOrderDetails CancelledOrders() throws ClassNotFoundException, SQLException {
+		OpenOrderDetails OpenOrder = new OpenOrderDetails();
+		int i = 0;
+		String sql = "Select * from todays_orders where cur_Status = 'CANCELLED'";
+		ResultSet OpenOrders = DataRequest.executeQuery(sql); 
+		while(OpenOrders.next()) {
+			OpenOrder.TotalAmount.add(OpenOrders.getFloat("Total_Amount"));
+			OpenOrder.TableNo.add(OpenOrders.getInt("table_no"));
+			OpenOrder.Name.add(OpenOrders.getString("Name_of_customer"));
+			OpenOrder.OrderId.add(OpenOrders.getInt("orderID"));
+			ArrayList<String> orderdetails = new ArrayList<String>();
+			orderdetails = orderDetails(OpenOrders.getString("order_list"));
+			OpenOrder.openorders.add(orderdetails);
+			
+		}
+		OpenOrders.close();
+		return OpenOrder;
+	}
+	
+	public String Insert(int TableNo, String Name, int[][] itemDetails) throws SQLException, ClassNotFoundException {
+		
 		String StrItemDetails="";
+		
 		for (int i[] : itemDetails) {
 			if(i[1] != 0)
 				StrItemDetails += i[0]+":"+i[1]+";";
 		}
-		/*String qns = "";
-		for (int i = 0;i < no_of_columns;i++)
-			qns += "?,";*/
 		ResultSet orderedid = conn.createStatement().executeQuery("SELECT MAX(ORDERID) FROM TODAYS_ORDERS");
 		orderedid.next();
 		int orderid = orderedid.getInt(1) + 1;
 		orderedid.close();
+		
 		Query = "INSERT INTO todays_orders VALUES("+TableNo+",'"+StrItemDetails+"','"+Name+"',"+"'OPEN'"+","+TotalAmount(StrItemDetails)+","+orderid+")";
-		/*PreparedStatement insertStatement = conn.prepareStatement(Query);
-		insertStatement.setInt(1, TableNo);
-		insertStatement.setString(2, StrItemDetails);
-		insertStatement.setString(3, Name);
-		insertStatement.setString(4, "OPEN");
-		insertStatement.setFloat(5, TotalAmount(StrItemDetails));
-		insertStatement.setInt(6, 1);
-		insertStatement.executeUpdate();
-		*/
+		
+		StrItemDetails = orderid + "$" + StrItemDetails;
+		
 		conn.createStatement().executeUpdate(Query);
 		Refresh();
+		return StrItemDetails;
 	}
 	
 	public float TotalAmount(String StrItemDetails) throws ClassNotFoundException, SQLException {
@@ -58,6 +130,33 @@ public class TodaysOrders extends RestaurantDB{
 		}
 		return amount;
 	}
+	
+	public ArrayList<String> orderDetails(String StrItemDetails) throws ClassNotFoundException, SQLException {
+		Foods f = new Foods(0);
+		StringTokenizer st = new StringTokenizer(StrItemDetails,";");
+		ArrayList<String> orderdetails = new ArrayList<String>();
+		int i = 0;
+		while(st.hasMoreTokens()) {
+			StringTokenizer item = new StringTokenizer(st.nextToken(),":");
+			int itemCode = Integer.parseInt(item.nextToken());
+			Float CostPerItem = f.PriceTable.get(itemCode);
+			int NoItem = Integer.parseInt(item.nextToken());
+			float totalPerItem = CostPerItem * NoItem;
+			ResultSet itemName = f.ExecuteQuerie("SELECT FoodItemName from Foods where ItemCode = " + itemCode);
+			itemName.next();
+			String temp = itemName.getString(1) + " X " + NoItem + " :	" + totalPerItem;;
+			orderdetails.add(temp); 
+		}
+		return orderdetails;
+	}
+	
+	public String curStatus(int OrderId) throws SQLException {
+		String sql = "SELECT cur_Status from todays_orders where orderID = "+OrderId ;
+		ResultSet status = DataRequest.executeQuery(sql);
+		status.next();
+		return status.getString(1);
+	}
+	
 	public ResultSet selectAll() throws SQLException {
 		Refresh();
 		return todaysOrders;

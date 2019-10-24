@@ -45,4 +45,20 @@
       <servlet-name>DeleteRow</servlet-name>
       <url-pattern>/DeleteRow</url-pattern>
   </servlet-mapping>
+  <servlet>
+      <servlet-name>SetCurStatusOfOrder</servlet-name>
+      <servlet-class>SetCurStatusOfOrder</servlet-class>
+  </servlet>
+  <servlet-mapping>
+      <servlet-name>SetCurStatusOfOrder</servlet-name>
+      <url-pattern>/SetCurStatusOfOrder</url-pattern>
+  </servlet-mapping>
+  <servlet>
+      <servlet-name>CurStatus</servlet-name>
+      <servlet-class>CurStatus</servlet-class>
+  </servlet>
+  <servlet-mapping>
+      <servlet-name>CurStatus</servlet-name>
+      <url-pattern>/CurStatus</url-pattern>
+  </servlet-mapping>
 </web-app>

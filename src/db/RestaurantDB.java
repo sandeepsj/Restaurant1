@@ -8,20 +8,37 @@ import java.sql.Statement;
 
 public class RestaurantDB {
 	public ResultSet result;
-	public Statement DataRequest;
-	public Connection conn;
+	public static Statement DataRequest;
+	public static Connection conn;
 	public String Query;
-	public int no_of_tables;
+	public static int no_of_tables = 18;
+	/*
+	 * here Static block is used. Because creating connection for each instance makes it easy to exceed the 
+	 * maximum limit of connections set by the database manager. creating connection statically 
+	 * makes that common for all the objects and only one connection is used for entire application
+	 */
+	static {
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			conn=DriverManager.getConnection("jdbc:mysql://localhost:3306/restaurant?serverTimezone=UTC#", "root", null);
+			
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 	public RestaurantDB() throws ClassNotFoundException, SQLException {
-		no_of_tables = 18;
-		Class.forName("com.mysql.cj.jdbc.Driver");
-		conn=DriverManager.getConnection("jdbc:mysql://localhost:3306/restaurant?serverTimezone=UTC#", "root", null);
 		DataRequest = conn.createStatement();
 	}
 	protected void finalize() throws Throwable{
 		result.close();
-		conn.close();
 		DataRequest.close();
+		conn.close();
+		
 	}
 	public int getRowCount(ResultSet rs) throws SQLException {
 		int n = 0;
