@@ -8,20 +8,21 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
-import db.Foods;
+import db.Employee;
 
 /**
- * Servlet implementation class AddItem
+ * Servlet implementation class signin
  */
-@WebServlet("/AddItem")
-public class AddItem extends HttpServlet {
+@WebServlet("/signin")
+public class signin extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public AddItem() {
+    public signin() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -31,7 +32,7 @@ public class AddItem extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		response.sendRedirect("FoodTableEditor.jsp");
+		
 	}
 
 	/**
@@ -39,17 +40,21 @@ public class AddItem extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		
 		try {
-			Foods food = new Foods();
-			food.insertRow(Integer.parseInt(request.getParameter("ItemCode")), request.getParameter("FoodItemName"), request.getParameter("FoodDomain"), Float.parseFloat(request.getParameter("Price")), Integer.parseInt(request.getParameter("Rating")), request.getParameter("imagePath"), request.getParameter("Description"));
-		} catch (NumberFormatException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
+			Employee emp = new Employee();
+			if(emp.validateUserCredential(request.getParameter("empid"),request.getParameter("password"))) {
+				//create an http session
+				HttpSession session = request.getSession();
+				session.setAttribute("empid", request.getParameter("empid"));
+				response.sendRedirect("home.jsp");
+			}
+			else {
+				response.getWriter().append("Username or password is Incorrect--><a href='signin.jsp'>Back to login page</a>");
+			}
+		} catch (ClassNotFoundException | SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		doGet(request, response);
 	}
+
 }

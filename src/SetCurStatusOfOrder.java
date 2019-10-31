@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import db.TodaysOrders;
+import db.OrderHistory;
 
 /**
  * Servlet implementation class SetCurStatusOfOrder
@@ -34,7 +34,7 @@ public class SetCurStatusOfOrder extends HttpServlet {
 		try {
 			String Action = request.getParameter("Action");
 			int OrderId = Integer.parseInt(request.getParameter("OrderId"));
-			TodaysOrders to = new TodaysOrders();
+			OrderHistory to = new OrderHistory();
 			to.changeCurStatus(Action,OrderId);
 
 		} catch (SQLException e) {
@@ -46,7 +46,7 @@ public class SetCurStatusOfOrder extends HttpServlet {
 		}
 		//response.getWriter().append("Served at: ").append(request.getContextPath());
 		
-		response.sendRedirect("OrderManagement.jsp");
+		response.sendRedirect("orderManagementsub.jsp");
 		
 		//change this to ajax
 	}

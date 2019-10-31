@@ -61,4 +61,28 @@
       <servlet-name>CurStatus</servlet-name>
       <url-pattern>/CurStatus</url-pattern>
   </servlet-mapping>
+  <servlet>
+      <servlet-name>signup</servlet-name>
+      <servlet-class>signup</servlet-class>
+  </servlet>
+  <servlet-mapping>
+      <servlet-name>signup</servlet-name>
+      <url-pattern>/signup</url-pattern>
+  </servlet-mapping>
+  <servlet>
+      <servlet-name>signin</servlet-name>
+      <servlet-class>signin</servlet-class>
+  </servlet>
+  <servlet-mapping>
+      <servlet-name>signin</servlet-name>
+      <url-pattern>/signin</url-pattern>
+  </servlet-mapping>
+  <servlet>
+      <servlet-name>signout</servlet-name>
+      <servlet-class>signout</servlet-class>
+  </servlet>
+  <servlet-mapping>
+      <servlet-name>signout</servlet-name>
+      <url-pattern>/signout</url-pattern>
+  </servlet-mapping>
 </web-app>

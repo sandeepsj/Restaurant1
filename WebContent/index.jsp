@@ -44,6 +44,8 @@
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 <style type="text/css">
+	.btn-default.btn-on-4.active{background-color: #006FFC;color: #5BB75B;}
+.btn-default.btn-off-4.active{background-color: #DA4F49;color: #DA4F49;}
 .decrement,.increment
 	{
 		cursor:pointer;
@@ -144,18 +146,6 @@
 			document.getElementById(name).value = Number(val)-1;
 		});
 	});
-        /* $('.input-number-increment').click(function() {
-          var $input = $(this).parents('.input-number-group').find('.input-number');
-          var val = parseInt($input.val(), 10);
-          $input.val(val + 1);
-        });
-
-        $('.input-number-decrement').click(function() {
-          var $input = $(this).parents('.input-number-group').find('.input-number');
-          var val = parseInt($input.val(), 10);
-          $input.val(val - 1);
-        })*/
-
 
     </script>
 
@@ -190,8 +180,7 @@
 								<ul class="nav navbar-nav navbar-right">
 									<li class="active"><a href="#banner">Home</a></li>
 									<li><a href="#about">About us</a></li>
-									<li><a href="#menu">Menu</a></li>
-									<li><a href="#reservation">Reservaion</a></li>
+									<li><a href="#mod">Menu</a></li>
 									<li><a href="#footer">Contact us</a></li>
 								</ul>
 							</div>
@@ -284,7 +273,18 @@
 		</div>
 		<!-- end container -->
 	</div>
-	<form method="post" class="reservations-box" name="contactform"
+	    <br>
+    <br>
+	<center><div class="btn-group" id="Mode" data-toggle="buttons">
+     	<label class="btn btn-default btn-on btn-lg active" id = "mod0">
+        <input type="radio"  value="1" name="mode" checked="checked">Book Table</label>
+        <label class="btn btn-default btn-off btn-lg" id = "mod1" >
+		<input type="radio" value="0" name="mode">Home Delivery</label>
+    </div>
+    </center>
+    <br>
+    <br>
+    <form method="post" class="reservations-box" name="contactform"
 		id="contactform" action="BookTable">
 		<div id="menu" class="menu-main pad-top-100 pad-bottom-100">
 			<div class="container">
@@ -377,15 +377,20 @@
 					<!-- end col -->
 				</div>
 				<!-- end row -->
+				<br>
+				<br>
+				
 			</div>
 			<!-- end container -->
+			
 		</div>
 		<!-- end menu -->
-		<div id="reservation"
-			class="reservations-main pad-top-100 pad-bottom-100">
+	
+		<div id="reservation" class="reservations-main pad-top-100 pad-bottom-100">
 			<div class="container">
 				<div class="row">
 					<div class="form-reservations-box">
+						
 						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 							<div class="wow fadeIn" data-wow-duration="1s"
 								data-wow-delay="0.1s">
@@ -393,7 +398,7 @@
 							</div>
 							<h4 class="form-title">PLACE YOUR ORDER</h4>
 							<p>PLEASE FILL OUT ALL REQUIRED* FIELDS. THANKS!</p>
-
+						
 
 							<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
 								<div class="form-box">
@@ -407,7 +412,7 @@
 								<div class="form-box">
 									<select name="table_no" id="no_of_persons" class="selectpicker">
 										<option selected disabled>Table</option>
-										<% for (int i = 1; i<= food.no_of_tables;i++){
+										<% for (int i = 1; i<= Foods.no_of_tables;i++){
                                         out.println("<option>"+i+"</option>");
                                         }%>
 									</select>
@@ -432,28 +437,10 @@
 		</div>
 		<!-- end reservations-main -->
 	</form>
+	
 	<!-- Footer -->
 	<div id="footer" class="footer-main">
-        <div class="footer-news pad-top-100 pad-bottom-70 parallax">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                        <div class="wow fadeIn" data-wow-duration="1s" data-wow-delay="0.1s">
-                            <h2 class="ft-title color-white text-center"> Newsletter </h2>
-                            <p> Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
-                        </div>
-                        <form>
-                            <input type="email" placeholder="Enter your e-mail id">
-                            <a href="#" class="orange-btn"><i class="fa fa-paper-plane-o" aria-hidden="true"></i></a>
-                        </form>
-                    </div>
-                    <!-- end col -->
-                </div>
-                <!-- end row -->
-            </div>
-            <!-- end container -->
-        </div>
-        <!-- end footer-news -->
+        
         <div class="footer-box pad-top-70">
             <div class="container">
                 <div class="row">
@@ -590,7 +577,22 @@
 				title="vivid-yellow" class="switcher vivid-yellow-bg"></a>
 		</div>
 	</section>
-
+	<script>
+	 $(document).ready(function() {
+	        $('#mod0').on('click', function() {
+	        	$('#mod').attr('src','table.jsp')
+	        });
+	        $('#mod1').on('click', function() {
+	        	$('#mod').attr('src','homedelivery.jsp')
+	        });
+	 });
+	 var iframe = document.getElementById("mod");
+	    
+	    // Adjusting the iframe height onload event
+	    iframe.onload = function(){
+	        iframe.style.height = iframe.contentWindow.document.body.scrollHeight + 'px';
+	    }
+	</script>
 	<!-- ALL JS FILES -->
 	<script src="js/all.js"></script>
 	<script src="js/bootstrap.min.js"></script>

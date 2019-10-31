@@ -15,17 +15,7 @@ public class Foods extends RestaurantDB{
 	public int curDomain = -1;
 	public ResultSetMetaData foodMeta;
 	public int nextItemCode;
-	//Pricelist[n][m]; n = itemcode; m = price;
 	Hashtable<Integer,Float> PriceTable = new Hashtable<Integer,Float>();
-	//public ResultSet curDomainSet;
-	/*public class FoodsRow{
-		public int itemCode;
-		public String FoodItemName;
-		public String FoodDomain;
-		public float Price;
-		public int Rating;
-		public Blob image;
-	}*/
 	public Foods(int a) throws ClassNotFoundException, SQLException {
 		Query = "SELECT * FROM FOODS;";
 		foods = DataRequest.executeQuery(Query);
@@ -88,19 +78,6 @@ public class Foods extends RestaurantDB{
 		Query = "DELETE from todays_menu where itemCode = " + ItemCode;
 		conn.createStatement().executeUpdate(Query);
 	}
-	/*}
-		Domain[] Domains = Domain.values();
-		Groups = new ResultSet[Domains.length];
-		for (int i = 0; i<Domains.length; i++) {
-			GetByDomain.setString(1, Domains[i].toString());
-			Groups[i] = GetByDomain.executeQuery();
-		}/* this is not possible because after each iteration the groups element connection is closed.one connection can be used only for one resultset
-
-	}
-
-	/*public void insertRows(Object [] row) throws SQLException {
-		insertStatement.setInt(1, row[0].getClass());
-	}*/
 
 	public void insertRow(int itemCode, String FoodItemName, String FoodDomain, float Price, int Rating, String image,String description) throws SQLException {
 		PreparedStatement insertStatement;
@@ -111,11 +88,6 @@ public class Foods extends RestaurantDB{
 		qns += "?";
 		Query = "INSERT INTO FOODS VALUES("+qns+")";
 		insertStatement = conn.prepareStatement(Query);
-		/*Query = "INSERT INTO FOODS VALUES(";
-		Query += itemCode + "," + FoodItemName + "," + FoodDomain + "," + Price + "," + Rating + "," + image + "," + description;
-		Query += ")";
-		System.out.println(Query);
-		DataRequest.executeUpdate(Query);*/
 		
 		insertStatement.setInt(1, itemCode);
 		insertStatement.setString(2, FoodItemName);
@@ -125,12 +97,12 @@ public class Foods extends RestaurantDB{
 		insertStatement.setString(6, image);
 		insertStatement.setString(7, description);
 		insertStatement.executeUpdate();
-		DataRequest.executeUpdate("Insert into Todays_menu values("+itemCode+",0)");
+		//DataRequest.executeUpdate("Insert into Todays_menu values("+itemCode+",0)");//Use trigger
 		Refresh();
 	}
 	public int[] AvailableToday() throws SQLException {
 		Query = "SELECT T.ITEMCODE FROM foods F ,TODAYS_MENU T WHERE F.itemCode=T.itemCode and Available_in_stock = 1";
-		ResultSet tmp = conn.createStatement().executeQuery(Query);
+		ResultSet tmp = DataRequest.executeQuery(Query);
 		int n = 0;
 		int [] arr = new int[getRowCount(tmp)];
 		int i = 0;
@@ -141,7 +113,7 @@ public class Foods extends RestaurantDB{
 	}
 	public boolean isAvailableToday(int itemCode) throws SQLException {
 		Query = "SELECT Available_in_stock FROM TODAYS_MENU where ItemCode = " + itemCode;
-		ResultSet tmp = conn.createStatement().executeQuery(Query);
+		ResultSet tmp = DataRequest.executeQuery(Query);
 		tmp.next();
 		return (tmp.getInt(1)==1);
 	}

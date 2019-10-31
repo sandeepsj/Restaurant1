@@ -9,19 +9,20 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import db.Foods;
+import db.Employee;
+
 
 /**
- * Servlet implementation class AddItem
+ * Servlet implementation class signup
  */
-@WebServlet("/AddItem")
-public class AddItem extends HttpServlet {
+@WebServlet("/signup")
+public class signup extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public AddItem() {
+    public signup() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -31,7 +32,8 @@ public class AddItem extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		response.sendRedirect("FoodTableEditor.jsp");
+		response.getWriter().append("Served at: ").append(request.getContextPath());
+		response.sendRedirect("signin.jsp");
 	}
 
 	/**
@@ -39,17 +41,15 @@ public class AddItem extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		
 		try {
-			Foods food = new Foods();
-			food.insertRow(Integer.parseInt(request.getParameter("ItemCode")), request.getParameter("FoodItemName"), request.getParameter("FoodDomain"), Float.parseFloat(request.getParameter("Price")), Integer.parseInt(request.getParameter("Rating")), request.getParameter("imagePath"), request.getParameter("Description"));
-		} catch (NumberFormatException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
+			Employee emp = new Employee();
+			emp.insertRow(request.getParameter("name"), Float.parseFloat(request.getParameter("salary")), request.getParameter("address"), request.getParameter("designation"), request.getParameter("password"), request.getParameter("phonenumber"));
+		} catch (ClassNotFoundException | SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 		doGet(request, response);
 	}
+
 }

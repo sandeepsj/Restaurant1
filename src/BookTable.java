@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import db.Foods;
-import db.TodaysOrders;
+import db.OrderHistory;
 
 @WebServlet("/BookTable")
 public class BookTable extends HttpServlet{
@@ -46,7 +46,7 @@ public class BookTable extends HttpServlet{
 				itemDetails[i][0] = FoodsArray[i];
 				itemDetails[i][1] = Integer.parseInt(request.getParameter(String.valueOf(FoodsArray[i])));
 			}
-			TodaysOrders TodaysFood = new TodaysOrders();
+			OrderHistory TodaysFood = new OrderHistory();
 			String orders = TodaysFood.Insert(TableNo, Name, itemDetails);
 			StringTokenizer st = new StringTokenizer(orders,"$");
 			orderid = Integer.parseInt(st.nextToken());

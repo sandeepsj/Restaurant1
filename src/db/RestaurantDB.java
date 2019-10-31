@@ -7,8 +7,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class RestaurantDB {
-	public ResultSet result;
-	public static Statement DataRequest;
+	public Statement DataRequest;
+	//public static Statement staticDataRequest;
 	public static Connection conn;
 	public String Query;
 	public static int no_of_tables = 18;
@@ -21,7 +21,7 @@ public class RestaurantDB {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			conn=DriverManager.getConnection("jdbc:mysql://localhost:3306/restaurant?serverTimezone=UTC#", "root", null);
-			
+		//	staticDataRequest = conn.createStatement();
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -35,10 +35,7 @@ public class RestaurantDB {
 		DataRequest = conn.createStatement();
 	}
 	protected void finalize() throws Throwable{
-		result.close();
 		DataRequest.close();
-		conn.close();
-		
 	}
 	public int getRowCount(ResultSet rs) throws SQLException {
 		int n = 0;

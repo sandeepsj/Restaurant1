@@ -1,5 +1,5 @@
 <%@ page import = "java.util.ArrayList" %>
-<%@ page import="db.TodaysOrders"%>
+<%@ page import="db.OrderHistory"%>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -110,8 +110,8 @@
                             
                             <ul class="list-group text-center">
                             <% 
-                            TodaysOrders todaysOrders = new TodaysOrders();
-                            ArrayList<String> orders = todaysOrders.orderDetails(request.getParameter("Orders"));
+                            OrderHistory orderHistory = new OrderHistory();
+                            ArrayList<String> orders = orderHistory.orderDetails(request.getParameter("Orders"));
                             for(String s : orders){
                             %>
                                 <li class="list-group-item"><i class="fa fa-check"></i><%=s%></li>
@@ -160,7 +160,7 @@
     <!-- ALL PLUGINS -->
     <script src="js/custom.js"></script>
     <script type="text/javascript">
-    	var timer = setInterval(status, 5000);
+    	var timer = setInterval(status, 500);
     	function status(){
     		var xhttp = new XMLHttpRequest();
     		xhttp.onreadystatechange = function() {
@@ -168,14 +168,12 @@
     				document.getElementById("orderStatus").innerHTML = this.responseText;
     				if(this.responseText == "CANCELLED"){
     					document.getElementById("orderStatus").innerHTML = "Sorry Your Order is Rejected! Contact any Staff"
-    					clearInterval(timer);
     				}
     				if(this.responseText == "OPEN"){
     					document.getElementById("orderStatus").innerHTML = "Your Order is in Queue, Please Wait for a Response"
     				}
     				if(this.responseText == "CLOSED"){
     					document.getElementById("orderStatus").innerHTML = "Your Order is Confirmed."
-    					clearInterval(timer);
     				}
     			}
     		};

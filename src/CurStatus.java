@@ -9,7 +9,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import db.TodaysOrders;
+import db.OrderHistory;
+
+
 
 /**
  * Servlet implementation class CurStatus
@@ -31,9 +33,9 @@ public class CurStatus extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		TodaysOrders to;
+		OrderHistory to;
 		try {
-			to = new TodaysOrders();
+			to = new OrderHistory();
 			response.getWriter().append(to.curStatus(Integer.parseInt(request.getParameter("OrderId"))));
 		} catch (ClassNotFoundException | SQLException e) {
 			// TODO Auto-generated catch block

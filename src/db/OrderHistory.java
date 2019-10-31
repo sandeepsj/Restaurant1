@@ -3,6 +3,7 @@ package db;
 import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
@@ -11,7 +12,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class TodaysOrders extends RestaurantDB{
+public class OrderHistory extends RestaurantDB{
 	public class OpenOrderDetails{
 		public ArrayList<ArrayList<String>> openorders = new ArrayList<ArrayList<String>>();
 		public ArrayList<String> Name = new ArrayList<String>();
@@ -19,18 +20,25 @@ public class TodaysOrders extends RestaurantDB{
 		public ArrayList<Integer> TableNo = new ArrayList<Integer>();
 		public ArrayList<Integer> OrderId = new ArrayList<Integer>();
 	}
-	public int no_of_columns;
+	public int LastOrderId;
 	public ResultSet todaysOrders;
 	public int totalAmount;
-	public TodaysOrders() throws ClassNotFoundException, SQLException {
+	public ResultSetMetaData OrderMeta;
+	public int no_of_columns;
+	public OrderHistory() throws ClassNotFoundException, SQLException {
 		super();
-		Query = "SELECT * FROM todays_orders;";
+		Query = "SELECT max(Orderid) from order_history;";
 		todaysOrders = DataRequest.executeQuery(Query);
-		no_of_columns = todaysOrders.getMetaData().getColumnCount();
+		todaysOrders.next();
+		LastOrderId = todaysOrders.getInt(1);
+		Query = "Select * from order_history;";
+		todaysOrders = DataRequest.executeQuery(Query);
+		OrderMeta = todaysOrders.getMetaData();
+		no_of_columns = OrderMeta.getColumnCount();
 	}
 	
 	public void changeCurStatus(String Action, int OrderId) throws SQLException {
-		String sql = "UPDATE todays_orders set cur_Status = ";
+		String sql = "UPDATE order_history set cur_Status = ";
 		if(Action.compareTo("Close") == 0) {
 			sql += "\"CLOSED\" ";
 		}
@@ -44,7 +52,7 @@ public class TodaysOrders extends RestaurantDB{
 	public OpenOrderDetails OpenOrders() throws ClassNotFoundException, SQLException {
 		OpenOrderDetails OpenOrder = new OpenOrderDetails();
 		int i = 0;
-		String sql = "Select * from todays_orders where cur_Status = 'OPEN'";
+		String sql = "Select * from todays_orders where cur_Status = 'OPEN' ";
 		ResultSet OpenOrders = DataRequest.executeQuery(sql); 
 		while(OpenOrders.next()) {
 			OpenOrder.TotalAmount.add(OpenOrders.getFloat("Total_Amount"));
@@ -106,12 +114,12 @@ public class TodaysOrders extends RestaurantDB{
 			if(i[1] != 0)
 				StrItemDetails += i[0]+":"+i[1]+";";
 		}
-		ResultSet orderedid = conn.createStatement().executeQuery("SELECT MAX(ORDERID) FROM TODAYS_ORDERS");
+		ResultSet orderedid = DataRequest.executeQuery("SELECT MAX(ORDERID) FROM order_history");
 		orderedid.next();
 		int orderid = orderedid.getInt(1) + 1;
 		orderedid.close();
 		
-		Query = "INSERT INTO todays_orders VALUES("+TableNo+",'"+StrItemDetails+"','"+Name+"',"+"'OPEN'"+","+TotalAmount(StrItemDetails)+","+orderid+")";
+		Query = "INSERT INTO order_history VALUES("+TableNo+",'"+StrItemDetails+"','"+Name+"',"+"'OPEN'"+","+TotalAmount(StrItemDetails)+","+orderid+",DEFAULT)";
 		
 		StrItemDetails = orderid + "$" + StrItemDetails;
 		
@@ -151,7 +159,7 @@ public class TodaysOrders extends RestaurantDB{
 	}
 	
 	public String curStatus(int OrderId) throws SQLException {
-		String sql = "SELECT cur_Status from todays_orders where orderID = "+OrderId ;
+		String sql = "SELECT cur_Status from order_history where orderID = "+OrderId ;
 		ResultSet status = DataRequest.executeQuery(sql);
 		status.next();
 		return status.getString(1);
@@ -164,7 +172,6 @@ public class TodaysOrders extends RestaurantDB{
 	public void Refresh() throws SQLException {
 		Query = "SELECT * FROM FOODs;";
 		todaysOrders = DataRequest.executeQuery(Query);
-		no_of_columns = todaysOrders.getMetaData().getColumnCount();
 	}
 	protected void finalize() throws Throwable{
 		todaysOrders.close();

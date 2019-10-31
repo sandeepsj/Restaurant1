@@ -2,85 +2,18 @@
 <%@ page import="java.sql.*"%>
 <%@ page import="javax.servlet.http.HttpSession"%>
 <%
-	Foods food = new Foods();
-	HttpSession checksession = request.getSession(false);
-	
-	if(checksession.getAttribute("empid") == null){
-		response.sendRedirect("signin.jsp");
-	}
 
+	OrderHistory orders = new OrderHistory();
+HttpSession checksession = request.getSession(false);
+if(checksession.getAttribute("empid") == null){
+	response.sendRedirect("signin.jsp");
+}
 %>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-<style type="text/css">
-/* Customize the label (the container) */
-.check-container {
-	display: block;
-	position: relative;
-	padding-left: 35px;
-	margin-bottom: 12px;
-	cursor: pointer;
-	font-size: 22px;
-	-webkit-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	user-select: none;
-}
 
-/* Hide the browser's default checkbox */
-.check-container input {
-	position: absolute;
-	opacity: 0;
-	cursor: pointer;
-	height: 0;
-	width: 0;
-}
-/* Create a custom checkbox */
-.checkmark {
-	position: absolute;
-	top: 0;
-	left: 0;
-	height: 25px;
-	width: 25px;
-	background-color: #bbbd;
-}
-
-/* On mouse-over, add a grey background color */
-.check-container:hover input ~ .checkmark {
-	background-color: #ccc;
-}
-
-/* When the checkbox is checked, add a blue background */
-.check-container input:checked ~ .checkmark {
-	background-color: #2196F3;
-}
-
-/* Create the checkmark/indicator (hidden when not checked) */
-.checkmark:after {
-	content: "";
-	position: absolute;
-	display: none;
-}
-/* Show the checkmark when checked */
-.check-container input:checked ~ .checkmark:after {
-	display: block;
-}
-
-/* Style the checkmark/indicator */
-.check-container .checkmark:after {
-	left: 9px;
-	top: 5px;
-	width: 5px;
-	height: 10px;
-	border: solid white;
-	border-width: 0 3px 3px 0;
-	-webkit-transform: rotate(45deg);
-	-ms-transform: rotate(45deg);
-	transform: rotate(45deg);
-}
-</style>
 <!-- Basic -->
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -108,7 +41,10 @@
 <!-- color -->
 <link id="changeable-colors" rel="stylesheet"
 	href="css/colors/strong-blue.css" />
-
+<!-- Bootstrap Core CSS -->
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<!-- DataTables CSS -->
+<link href="css/dataTables.bootstrap.css" rel="stylesheet">
 <!-- Modernizer -->
 <script src="js/modernizer.js"></script>
 
@@ -147,10 +83,10 @@
 							<div id="navbar" class="navbar-collapse collapse">
 								<ul class="nav navbar-nav navbar-right">
 									<li><a href="home.jsp">Home</a></li>
-									<li class="active"><a href="todaysMenuEditor.jsp">Today's Menu</a></li>
+									<li><a href="todaysMenuEditor.jsp">Today's Menu</a></li>
 									<li><a href="FoodTableEditor.jsp">Edit Food DB</a></li>
 									<li><a href="OrderManagement.jsp">Todays Orders</a></li>
-									<li><a href="OrderHistory.jsp">Order History</a></li>
+									<li class="active"><a href="OrderHistory.jsp">Order History</a></li>
 									<li><a onclick="signout()">Sign Out</a></li>
 								</ul>
 							</div>
@@ -171,106 +107,60 @@
 	</div>
 	<!-- end banner -->
 
-
-
-<form method = "post" action = "UpdateTodaysFoods">
-	<div id="menu" class="menu-main pad-top-100 pad-bottom-100">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-					<div class="wow fadeIn" data-wow-duration="1s"
-						data-wow-delay="0.1s">
-						<h2 class="block-title text-center">Today's Menu</h2>
-						<p class="title-caption text-center">Select items for today's Menu.<br>
-						You can check the items that are available for today and uncheck those are not.</p>
-					</div>
-					<div class="tab-menu">
-						<div class="slider slider-nav">
-							<div class="tab-title-menu">
-								<h2>STARTERS</h2>
-								<p>
-									<i class="flaticon-canape"></i>
-								</p>
-							</div>
-							<div class="tab-title-menu">
-								<h2>MAIN DISHES</h2>
-								<p>
-									<i class="flaticon-dinner"></i>
-								</p>
-							</div>
-							<div class="tab-title-menu">
-								<h2>DESERTS</h2>
-								<p>
-									<i class="flaticon-desert"></i>
-								</p>
-							</div>
-							<div class="tab-title-menu">
-								<h2>DRINKS</h2>
-								<p>
-									<i class="flaticon-coffee"></i>
-								</p>
-							</div>
+		<div id="menu" class="menu-main pad-top-100 pad-bottom-100">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+						<div class="wow fadeIn" data-wow-duration="1s"
+							data-wow-delay="0.1s">
+							<h2 class="block-title text-center">Order History</h2>
+							<p class="title-caption text-center">
+								write something here
+							</p>
 						</div>
-						
-							<div class="slider slider-single">
-								<%
-									while (food.nextDomain()) {
-										out.println("<div>");
-										ResultSet a = food.curDomain();
-										while (a.next()) {
-								%>
-								<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
-									<div class="offer-item">
-										<img src=" <%=a.getString("imagePath")%> " alt=""
-											class="img-responsive">
-										<div>
-											<h3><%=a.getString("FoodItemName").toUpperCase()%>
+						<div class="tab-menu">
+							<div class="panel-body">
+								<table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
+									<thead>
+										<tr id='tHeader'>
+											<% for (int i = 1; i<=orders.no_of_columns;i++){ %>
+											<th><%=orders.OrderMeta.getColumnName(i) %></th>
+											<%} %>
+										</tr>
+									</thead>
+									<tbody>
 
-											</h3>
-											<br>
-											<p><%= a.getString("Description") %></p>
-										</div>
-
-										<label class="check-container"> <input type="checkbox"
-											<%if (food.isAvailableToday(a.getInt("itemCode")))
-						out.print("checked='checked'");%>
-											name = 'menu' value ='<%=a.getInt("itemCode")%>'> <span
-											class="checkmark"></span>
-										</label>
-										<!--span class="offer-price"a.getString("Price")e") %></span!-->
-									</div>
-								</div>
-								<!-- end col -->
-								<%
-									}
-										a.close();
-										out.println("</div>");
-									}
-								%>
+										<%
+										int i = 0;
+										while(orders.todaysOrders.next()){
+											if(i == 0){
+                                    			out.println("<tr class='odd gradeX'>");
+                                    			i = 1;
+											}
+											else{
+												out.println("<tr class='even gradeC'>");
+												i = 0;
+											}
+                                    		for(int j = 1; j<=orders.no_of_columns; j++){
+                                      			out.print("<td id = 'editor' contenteditable = 'True'>"+orders.todaysOrders.getString(j)+"</td>");
+                                    		} %>
+										
+										</tr>
+										<%
+                                		} %>
+									</tbody>
+								</table>
+								<!-- /.table-responsive -->
 							</div>
-						
-					</div>
-				</div>
-				<!-- end tab-menu -->
-			</div>
-			<!-- end col -->
-		</div>
-		<!-- end row -->
-	</div>
-	<!-- end container -->
-	<div id="reservation"
-		class="reservations-main pad-top-100 pad-bottom-100">
-		<div class="reserve-book-btn text-center">
-			<button class="hvr-underline-from-center" type="submit" value="SEND"
-				id="submit">UPDATE TODAY'S MENU</button>
-		</div>
-		<!-- end container -->
-	</div>
-	<!-- end reservations-main -->
-	</div>
-	<!-- end menu -->
-</form>
 
+						</div>
+					</div>
+					<!-- end tab-menu -->
+				</div>
+				<!-- end col -->
+			</div>
+			<!-- end row -->
+		</div>
 
 	<div id="footer" class="footer-main">
 		<div class="footer-box pad-top-70">
@@ -406,7 +296,23 @@
 				title="vivid-yellow" class="switcher vivid-yellow-bg"></a>
 		</div>
 	</section>
-	<script>
+
+	<!-- ALL JS FILES -->
+	<script src="js/all.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<!-- ALL PLUGINS -->
+	<script src="js/custom.js"></script>
+	<script src="js/jquery.min.js"></script>
+	<script src="js/jquery.dataTables.min.js"></script>
+	<script src="js/dataTables.bootstrap.min.js"></script>
+	  <script>
+    $(document).ready(function() {
+        $('#dataTables-example').DataTable({
+            responsive: true
+        });
+    });
+    </script>
+    	<script>
 	function signout(){
 		var xhttp = new XMLHttpRequest();
 		xhttp.onreadystatechange = function() {
@@ -420,11 +326,9 @@
 		xhttp.send();
 	}
 	</script>
-	<!-- ALL JS FILES -->
-	<script src="js/all.js"></script>
-	<script src="js/bootstrap.min.js"></script>
-	<!-- ALL PLUGINS -->
-	<script src="js/custom.js"></script>
+
+	<!-- Page-Level Demo Scripts - Tables - Use for reference -->
+	
 </body>
 
 </html>

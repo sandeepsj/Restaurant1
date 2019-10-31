@@ -1,6 +1,7 @@
 
 
 import java.io.IOException;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import javax.servlet.ServletException;
@@ -9,19 +10,19 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import db.Foods;
+import db.RestaurantDB;
 
 /**
- * Servlet implementation class AddItem
+ * Servlet implementation class LastOrder
  */
-@WebServlet("/AddItem")
-public class AddItem extends HttpServlet {
+@WebServlet("/LastOrder")
+public class LastOrder extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public AddItem() {
+    public LastOrder() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -31,7 +32,19 @@ public class AddItem extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		response.sendRedirect("FoodTableEditor.jsp");
+		try {
+			RestaurantDB rdb = new RestaurantDB();
+			String Query = "SELECT max(Orderid) from order_history;";
+			ResultSet todaysOrders = rdb.DataRequest.executeQuery(Query);
+			todaysOrders.next();
+			int LastOrderId = todaysOrders.getInt(1);
+			todaysOrders.close();
+			response.getWriter().append(""+LastOrderId);
+		} catch (SQLException | ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 
 	/**
@@ -39,17 +52,7 @@ public class AddItem extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		
-		try {
-			Foods food = new Foods();
-			food.insertRow(Integer.parseInt(request.getParameter("ItemCode")), request.getParameter("FoodItemName"), request.getParameter("FoodDomain"), Float.parseFloat(request.getParameter("Price")), Integer.parseInt(request.getParameter("Rating")), request.getParameter("imagePath"), request.getParameter("Description"));
-		} catch (NumberFormatException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		doGet(request, response);
 	}
+
 }

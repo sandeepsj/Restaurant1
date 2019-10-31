@@ -1,8 +1,13 @@
 <%@ page import="db.*"%>
 <%@ page import="java.sql.*"%>
+<%@ page import="javax.servlet.http.HttpSession"%>
 <%
 
     Foods food = new Foods();
+	HttpSession checksession = request.getSession(false);
+	if(checksession.getAttribute("empid") == null){
+		response.sendRedirect("signin.jsp");
+	}
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -146,11 +151,12 @@
 							</div>
 							<div id="navbar" class="navbar-collapse collapse">
 								<ul class="nav navbar-nav navbar-right">
-									<li class="active"><a href="#banner">Home</a></li>
+									<li><a href="home.jsp">Home</a></li>
 									<li><a href="todaysMenuEditor.jsp">Today's Menu</a></li>
-									<li><a href="FoodTableEditor.jsp">Food Table</a></li>
-									<li><a href="#menu">Menu</a></li>
-									<li><a href="#menu">Menu</a></li>
+									<li class="active"><a href="FoodTableEditor.jsp">Edit Food DB</a></li>
+									<li><a href="OrderManagement.jsp">Todays Orders</a></li>
+									<li><a href="OrderHistory.jsp">Order History</a></li>
+									<li><a onclick="signout()">Sign Out</a></li>
 
 								</ul>
 							</div>
@@ -571,6 +577,20 @@
         });
     });
     </script>
+    	<script>
+	function signout(){
+		var xhttp = new XMLHttpRequest();
+		xhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+				alert("successfully signed out");
+				location.reload();
+			}
+		};
+		var url = "signout";
+		xhttp.open("GET", url, true);
+		xhttp.send();
+	}
+	</script>
 </body>
 
 </html>
