@@ -180,7 +180,7 @@
 								<ul class="nav navbar-nav navbar-right">
 									<li class="active"><a href="#banner">Home</a></li>
 									<li><a href="#about">About us</a></li>
-									<li><a href="#mod">Menu</a></li>
+									<li><a href="#menu">Menu</a></li>
 									<li><a href="#footer">Contact us</a></li>
 								</ul>
 							</div>
@@ -275,15 +275,7 @@
 	</div>
 	    <br>
     <br>
-	<center><div class="btn-group" id="Mode" data-toggle="buttons">
-     	<label class="btn btn-default btn-on btn-lg active" id = "mod0">
-        <input type="radio"  value="1" name="mode" checked="checked">Book Table</label>
-        <label class="btn btn-default btn-off btn-lg" id = "mod1" >
-		<input type="radio" value="0" name="mode">Home Delivery</label>
-    </div>
-    </center>
-    <br>
-    <br>
+	
     <form method="post" class="reservations-box" name="contactform"
 		id="contactform" action="BookTable">
 		<div id="menu" class="menu-main pad-top-100 pad-bottom-100">
@@ -386,6 +378,14 @@
 		</div>
 		<!-- end menu -->
 	
+	<center><div class="btn-group" id="Mode" data-toggle="buttons">
+     	<label class="btn btn-default btn-on btn-lg active" id = "mod0">
+        <input type="radio"  value="1" name="mode" checked="checked">Book Table</label>
+        <label class="btn btn-default btn-off btn-lg" id = "mod1" >
+		<input type="radio" value="0" name="mode">Home Delivery</label>
+    </div>
+    </center>
+
 		<div id="reservation" class="reservations-main pad-top-100 pad-bottom-100">
 			<div class="container">
 				<div class="row">
@@ -402,7 +402,7 @@
 
 							<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
 								<div class="form-box">
-									<input type="text" name="form_name" id="form_name"
+									<input type="text" name="name" id="form_name"
 										placeholder="Name" required="required"
 										data-error="Firstname is required.">
 								</div>
@@ -410,14 +410,15 @@
 
 							<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
 								<div class="form-box">
-									<select name="table_no" id="no_of_persons" class="selectpicker">
+									<select name="table_no" id="no_of_persons">
 										<option selected disabled>Table</option>
-										<% for (int i = 1; i<= Foods.no_of_tables;i++){
-                                        out.println("<option>"+i+"</option>");
-                                        }%>
+										<% for (int i = 1; i<= Foods.no_of_tables;i++){ %>
+                                        <option><%= i %></option>
+                                        <% } %>
 									</select>
 								</div>
 							</div>
+							<input type="hidden" name="mod" value="TABLE">
 							<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 								<div class="reserve-book-btn text-center">
 									<button class="hvr-underline-from-center" type="submit"
@@ -580,10 +581,14 @@
 	<script>
 	 $(document).ready(function() {
 	        $('#mod0').on('click', function() {
-	        	$('#mod').attr('src','table.jsp')
+	        	htmlStr = ' <div class="container"> <div class="row"> <div class="form-reservations-box"> <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> <div class="wow fadeIn" data-wow-duration="1s" data-wow-delay="0.1s"> <h2 class="block-title text-center">Book Your Table</h2> </div> <h4 class="form-title">PLACE YOUR ORDER</h4> <p>PLEASE FILL OUT ALL REQUIRED* FIELDS. THANKS!</p> <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12"> <div class="form-box"> <input type="text" name="name" id="form_name" placeholder="Name" required="required" data-error="Firstname is required."> </div> </div> <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12"> <div class="form-box"> <select name="table_no" id="no_of_persons"> <option selected disabled>Table</option> <% for (int i = 1; i<= Foods.no_of_tables;i++){ %> <option><%= i %></option> <% } %> </select> </div> </div><input type="hidden" name="mod" value="TABLE"> <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> <div class="reserve-book-btn text-center"> <button class="hvr-underline-from-center" type="submit" value="Submit" id="submit">BOOK MY TABLE</button> </div> </div> <!-- end col --> <!-- end form --> </div> <!-- end col --> </div> <!-- end reservations-box --> </div> <!-- end row --> </div> <!-- end container -->'
+	        	document.getElementById("reservation").innerHTML = htmlStr;
+
 	        });
 	        $('#mod1').on('click', function() {
-	        	$('#mod').attr('src','homedelivery.jsp')
+	        	htmlStr = ' <div class="container"> <div class="row"> <div class="form-reservations-box"> <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> <div class="wow fadeIn" data-wow-duration="1s" data-wow-delay="0.1s"> <h2 class="block-title text-center">Home Delivery</h2> </div> <h4 class="form-title">PLACE YOUR ORDER</h4> <p>PLEASE FILL OUT ALL REQUIRED* FIELDS. THANKS!</p> <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12"> <div class="form-box"> <input type="text" name="name" id="form_name" placeholder="Name" required="required" data-error="Firstname is required."> </div> </div> <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12"> <div class="form-box"> <input type="text" name="address" id="address" placeholder="Address" required="required" data-error="Firstname is required."> </div> </div> <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12"> <div class="form-box"> <input type="number" name="phno" id="phno" placeholder="Contact Number" required="required" data-error="Firstname is required."> </div> </div> <input type="hidden" name="mod" value="HOME"> <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> <div class="reserve-book-btn text-center"> <button class="hvr-underline-from-center" type="submit" value="Submit" id="submit">PLACE THE ORDER</button> </div> </div> <!-- end col --> <!-- end form --> </div> <!-- end col --> </div> <!-- end reservations-box --> </div> <!-- end row --> </div> <!-- end container -->'
+	        	document.getElementById("reservation").innerHTML = htmlStr;
+
 	        });
 	 });
 	 var iframe = document.getElementById("mod");

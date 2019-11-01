@@ -36,8 +36,45 @@ public class BookTable extends HttpServlet{
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		String mod = request.getParameter("mod");
+		if(mod.equals("HOME")) {
+			homedelivery(request,response);
+		}
+		else if(mod.equals("TABLE")) {
+			tabledelivery(request,response);
+		}
+		
+		doGet(request, response);
+	}
+	
+	public void homedelivery(HttpServletRequest request, HttpServletResponse response) {
+		String address = request.getParameter("address");
+		String phno = request.getParameter("phno");
+		Name = request.getParameter("name");
+		try {
+			Foods food = new Foods();
+			int FoodsArray[] = food.AvailableToday();
+			itemDetails = new int[FoodsArray.length][2];
+			for (int i =0 ; i<FoodsArray.length; i++) {
+				itemDetails[i][0] = FoodsArray[i];
+				itemDetails[i][1] = Integer.parseInt(request.getParameter(String.valueOf(FoodsArray[i])));
+			}
+			OrderHistory TodaysFood = new OrderHistory();
+			String orders = TodaysFood.Insert(Name, itemDetails, address, phno);
+			StringTokenizer st = new StringTokenizer(orders,"$");
+			orderid = Integer.parseInt(st.nextToken());
+			Orders = st.nextToken();
+			TotalAmount = TodaysFood.TotalAmount(Orders);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void tabledelivery(HttpServletRequest request, HttpServletResponse response) {
 		TableNo = Integer.parseInt(request.getParameter("table_no"));
-		Name = request.getParameter("form_name");
+		Name = request.getParameter("name");
 		try {
 			Foods food = new Foods();
 			int FoodsArray[] = food.AvailableToday();
@@ -57,6 +94,5 @@ public class BookTable extends HttpServlet{
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		doGet(request, response);
 	}
 }

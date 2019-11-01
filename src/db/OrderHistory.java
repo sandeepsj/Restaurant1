@@ -1,6 +1,7 @@
 package db;
 
 import java.io.IOException;
+import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -106,25 +107,75 @@ public class OrderHistory extends RestaurantDB{
 		return OpenOrder;
 	}
 	
-	public String Insert(int TableNo, String Name, int[][] itemDetails) throws SQLException, ClassNotFoundException {
-		
+	//Function to convert int array of itemcode and number of items into a single string of json format
+	public String itemDetailsToString(int[][] itemDetails) {
 		String StrItemDetails="";
 		
 		for (int i[] : itemDetails) {
 			if(i[1] != 0)
 				StrItemDetails += i[0]+":"+i[1]+";";
 		}
-		ResultSet orderedid = DataRequest.executeQuery("SELECT MAX(ORDERID) FROM order_history");
-		orderedid.next();
-		int orderid = orderedid.getInt(1) + 1;
-		orderedid.close();
+		return StrItemDetails;
+	}
+	
+	/* 
+	 * The mthod Insert has two versions which are differentiated with parameter type 
+	 * Which is required to deal with both orders to the table and home delivery
+	 */
+	public String Insert(int TableNo, String Name, int[][] itemDetails) throws SQLException, ClassNotFoundException {
 		
-		Query = "INSERT INTO order_history VALUES("+TableNo+",'"+StrItemDetails+"','"+Name+"',"+"'OPEN'"+","+TotalAmount(StrItemDetails)+","+orderid+",DEFAULT)";
+		String StrItemDetails=itemDetailsToString(itemDetails);//Call function itemDetailsToString()
 		
-		StrItemDetails = orderid + "$" + StrItemDetails;
+		/*Using the Stored procedure InsertTableOrder since 
+		 * its required into insert values into two tables
+		 *  1-orderHistory and 2-order_table
+		 */
+		Query = "{CALL `InsertTableOrder`(?,?,?,?,?,?)}";
+		//Query = "CALL `InsertTableOrder`('"+StrItemDetails+"','"+Name+"','"+"OPEN"+"',"+TotalAmount(StrItemDetails)+","+TableNo+")";
+		CallableStatement cstmt = conn.prepareCall(Query);
+		cstmt.setString(1, StrItemDetails);
+		cstmt.setString(2, Name);
+		cstmt.setString(3, "OPEN");
+		cstmt.setInt(4, (int)TotalAmount(StrItemDetails));
+		cstmt.setInt(5, TableNo);
+		cstmt.registerOutParameter(6, java.sql.Types.INTEGER);
+		cstmt.executeUpdate();
+		int orderid = cstmt.getInt(6);
 		
-		conn.createStatement().executeUpdate(Query);
+		/*refresh is used to get the new table details after a row is inserted the prvious result 
+		 * set is now updated with the latest changes made to the table
+		 */
 		Refresh();
+		StrItemDetails = orderid + "$" + StrItemDetails;
+		return StrItemDetails;
+	}
+	public String Insert(String Name, int[][] itemDetails,String address,String phno) throws SQLException, ClassNotFoundException {
+
+		String StrItemDetails=itemDetailsToString(itemDetails);//Call function itemDetailsToString()
+		
+		/*Using the Stored procedure InsertTableOrder since 
+		 * its required into insert values into two tables
+		 *  1-orderHistory and 2-order_home(which is made to keep details of home delivery)
+		 */
+		Query = "{CALL `InsertHomeOrder`(?,?,?,?,?,?,?)}";
+		//Query = "CALL `InsertHomeOrder`('"+StrItemDetails+"','"+Name+"','"+"OPEN"+"',"+TotalAmount(StrItemDetails)+",'"+address+"','"+phno+"')";
+		CallableStatement cstmt = conn.prepareCall(Query);
+		cstmt.setString(1, StrItemDetails);
+		cstmt.setString(2, Name);
+		cstmt.setString(3, "OPEN");
+		cstmt.setInt(4, (int)TotalAmount(StrItemDetails));
+		cstmt.setString(5, address);
+		cstmt.setString(6, phno);
+		cstmt.registerOutParameter(7, java.sql.Types.INTEGER);
+		cstmt.executeUpdate();
+		int orderid = cstmt.getInt(7);
+		
+		
+		/*refresh is used to get the new table details after a row is inserted the prvious result 
+		 * set is now updated with the latest changes made to the table
+		 */
+		Refresh();
+		StrItemDetails = orderid + "$" + StrItemDetails;
 		return StrItemDetails;
 	}
 	
@@ -170,7 +221,7 @@ public class OrderHistory extends RestaurantDB{
 		return todaysOrders;
 	}
 	public void Refresh() throws SQLException {
-		Query = "SELECT * FROM FOODs;";
+		Query = "SELECT * FROM order_history;";
 		todaysOrders = DataRequest.executeQuery(Query);
 	}
 	protected void finalize() throws Throwable{
