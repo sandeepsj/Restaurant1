@@ -78,6 +78,7 @@ if(checksession.getAttribute("empid") == null){
 									<li><a href="todaysMenuEditor.jsp">Today's Menu</a></li>
 									<li><a href="FoodTableEditor.jsp">Edit Food DB</a></li>
 									<li><a href="OrderManagement.jsp">Todays Orders</a></li>
+                                    <li><a href="HomeOrderManagement.jsp">Home Delivery</a></li>
 									<li><a href="OrderHistory.jsp">Order History</a></li>
                                     <li><a onclick="signout()">Sign Out</a></li>
 								</ul>

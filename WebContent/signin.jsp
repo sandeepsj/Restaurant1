@@ -209,10 +209,10 @@
 						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 							<div class="wow fadeIn" data-wow-duration="1s"
 								data-wow-delay="0.1s">
-								<h2 class="block-title text-center">Sign Up</h2>
+								<h2 class="block-title text-center">Sign In</h2>
 							</div>
-							<h4 class="form-title">Create a new account</h4>
-							<p>PLEASE FILL OUT ALL REQUIRED* FIELDS. THANKS!</p>
+							
+							<p>Give your Employee id as username and Sign in with your secret password.</p>
 						
 
 							<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">

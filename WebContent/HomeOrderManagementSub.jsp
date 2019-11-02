@@ -1,14 +1,14 @@
 <%@ page import = "java.util.ArrayList" %>
 <%@ page import="db.OrderHistory"%>
-<%@ page import="db.OrderHistory.TableOrders"%>
+<%@ page import="db.OrderHistory.HomeOrders"%>
 <%@ page import="javax.servlet.http.HttpSession"%>
 <%
 
 OrderHistory to = new OrderHistory();
 
-TableOrders ood1 = to.new TableOrders().OpenOrders();
-TableOrders ood2 = to.new TableOrders().ClosedOrders();
-TableOrders ood3 = to.new TableOrders().CancelledOrders();
+HomeOrders ood1 = to.new HomeOrders().OpenOrders();
+HomeOrders ood2 = to.new HomeOrders().ClosedOrders();
+HomeOrders ood3 = to.new HomeOrders().CancelledOrders();
 HttpSession checksession = request.getSession(false);
 if(checksession.getAttribute("empid") == null){
 	response.sendRedirect("signin.jsp");
@@ -43,7 +43,7 @@ if(checksession.getAttribute("empid") == null){
     <!-- Responsive CSS -->
     <link rel="stylesheet" href="css/responsive.css">
     <!-- color -->
-    <link id="changeable-colors" rel="stylesheet" href="css/colors/moderate-green.css" />
+    <link id="changeable-colors" rel="stylesheet" href="css/colors/vivid-yellow.css" />
 
     <!-- Modernizer -->
     <script src="js/modernizer.js"></script>
@@ -77,7 +77,8 @@ if(checksession.getAttribute("empid") == null){
                     	ArrayList<String> items = ood1.openorders.get(i);
                     	String NameOfCustomer = ood1.Name.get(i); 
                     	float TotalAmount = ood1.TotalAmount.get(i);
-                    	int TableNo = ood1.TableNo.get(i);
+                    	String address = ood1.address.get(i);
+                        String contact_number = ood1.contact_number.get(i);
                     	int OrderId = ood1.OrderId.get(i);
                     %>
                     <!-- item -->
@@ -88,7 +89,8 @@ if(checksession.getAttribute("empid") == null){
                                 <div class="pric-icon">
                                     <img src="images/food.png" alt="" />
                                 </div>
-                                <h3>Table No:<%=TableNo %>--<%=NameOfCustomer %></h3>
+                                <h3>Name:<%=NameOfCustomer %></h3>
+                                <h3>address:<%=address %>--Phno:<%=contact_number %></h3>
                             </div>
                     
                             <div class="panel-body text-center">
@@ -132,7 +134,8 @@ if(checksession.getAttribute("empid") == null){
                     	ArrayList<String> items = ood2.openorders.get(i);
                     	String NameOfCustomer = ood2.Name.get(i); 
                     	float TotalAmount = ood2.TotalAmount.get(i);
-                    	int TableNo = ood2.TableNo.get(i);
+                    	String address = ood2.address.get(i);
+                        String contact_number = ood2.contact_number.get(i);
                     	int OrderId = ood2.OrderId.get(i);
                     %>
                     <!-- item -->
@@ -143,7 +146,8 @@ if(checksession.getAttribute("empid") == null){
                                 <div class="pric-icon">
                                     <img src="images/food.png" alt="" />
                                 </div>
-                                <h3>Table No:<%=TableNo %>--<%=NameOfCustomer %></h3>
+                                <h3>Name:<%=NameOfCustomer %></h3>
+                                <h3>address:<%=address %>--Phno:<%=contact_number %></h3>
                             </div>
                     
                             <div class="panel-body text-center">
@@ -184,7 +188,8 @@ if(checksession.getAttribute("empid") == null){
                     	ArrayList<String> items = ood3.openorders.get(i);
                     	String NameOfCustomer = ood3.Name.get(i); 
                     	float TotalAmount = ood3.TotalAmount.get(i);
-                    	int TableNo = ood3.TableNo.get(i);
+                    	String address = ood3.address.get(i);
+                        String contact_number = ood3.contact_number.get(i);
                     	int OrderId = ood3.OrderId.get(i);
                     %>
                     <!-- item -->
@@ -195,7 +200,8 @@ if(checksession.getAttribute("empid") == null){
                                 <div class="pric-icon">
                                     <img src="images/food.png" alt="" />
                                 </div>
-                                <h3>Table No:<%=TableNo %>--<%=NameOfCustomer %></h3>
+                                <h3>Name:<%=NameOfCustomer %></h3>
+                                <h3>address:<%=address %>--Phno:<%=contact_number %></h3>
                             </div>
                     
                             <div class="panel-body text-center">

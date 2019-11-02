@@ -14,12 +14,151 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class OrderHistory extends RestaurantDB{
-	public class OpenOrderDetails{
+	public class OrderDetails{
 		public ArrayList<ArrayList<String>> openorders = new ArrayList<ArrayList<String>>();
 		public ArrayList<String> Name = new ArrayList<String>();
 		public ArrayList<Float> TotalAmount = new ArrayList<Float>();
-		public ArrayList<Integer> TableNo = new ArrayList<Integer>();
+		public ArrayList<String> mod = new ArrayList<String>();
 		public ArrayList<Integer> OrderId = new ArrayList<Integer>();
+	}
+	/*
+	 * Table Order is for storing the data of orders which are ordered to the table only while
+	 * home order stores data of orders demanding home delivery
+	 */
+	
+	/*
+	 * ---------------------------------------------------------------------------
+	 *                       class for Table orders
+	 *----------------------------------------------------------------------------                      
+	 */
+	public class TableOrders extends OrderDetails{
+		public ArrayList<Integer> TableNo = new ArrayList<Integer>();
+		public TableOrders OpenOrders() throws ClassNotFoundException, SQLException {
+			TableOrders OpenOrder = new TableOrders();
+			int i = 0;
+			String sql = "Select * from todays_orders torder, orders_on_table as otable where torder.cur_Status = 'OPEN' and torder.order_mod = 'TABLE' and torder.orderID = otable.orderID;";
+			ResultSet OpenOrders = DataRequest.executeQuery(sql); 
+			while(OpenOrders.next()) {
+				OpenOrder.TotalAmount.add(OpenOrders.getFloat("Total_Amount"));
+				OpenOrder.TableNo.add(OpenOrders.getInt("table_no"));
+				OpenOrder.Name.add(OpenOrders.getString("Name_of_customer"));
+				OpenOrder.OrderId.add(OpenOrders.getInt("orderID"));
+				ArrayList<String> orderdetails = new ArrayList<String>();
+				orderdetails = orderDetails(OpenOrders.getString("order_list"));
+				OpenOrder.openorders.add(orderdetails);
+				
+			}
+			OpenOrders.close();
+			return OpenOrder;
+		}
+		
+		public TableOrders ClosedOrders() throws ClassNotFoundException, SQLException {
+			TableOrders OpenOrder = new TableOrders();
+			int i = 0;
+			String sql = "Select * from todays_orders torder, orders_on_table as otable where torder.cur_Status = 'CLOSED' and torder.order_mod = 'TABLE' and torder.orderID = otable.orderID;";
+			ResultSet OpenOrders = DataRequest.executeQuery(sql); 
+			while(OpenOrders.next()) {
+				OpenOrder.TotalAmount.add(OpenOrders.getFloat("Total_Amount"));
+				OpenOrder.TableNo.add(OpenOrders.getInt("table_no"));
+				OpenOrder.Name.add(OpenOrders.getString("Name_of_customer"));
+				OpenOrder.OrderId.add(OpenOrders.getInt("orderID"));
+				ArrayList<String> orderdetails = new ArrayList<String>();
+				orderdetails = orderDetails(OpenOrders.getString("order_list"));
+				OpenOrder.openorders.add(orderdetails);
+				
+			}
+			OpenOrders.close();
+			return OpenOrder;
+		}
+		
+		public TableOrders CancelledOrders() throws ClassNotFoundException, SQLException {
+			TableOrders OpenOrder = new TableOrders();
+			int i = 0;
+			String sql = "Select * from todays_orders torder, orders_on_table as otable where torder.cur_Status = 'CANCELLED' and torder.order_mod = 'TABLE' and torder.orderID = otable.orderID;";
+			ResultSet OpenOrders = DataRequest.executeQuery(sql); 
+			while(OpenOrders.next()) {
+				OpenOrder.TotalAmount.add(OpenOrders.getFloat("Total_Amount"));
+				OpenOrder.TableNo.add(OpenOrders.getInt("table_no"));
+				OpenOrder.Name.add(OpenOrders.getString("Name_of_customer"));
+				OpenOrder.OrderId.add(OpenOrders.getInt("orderID"));
+				ArrayList<String> orderdetails = new ArrayList<String>();
+				orderdetails = orderDetails(OpenOrders.getString("order_list"));
+				OpenOrder.openorders.add(orderdetails);
+				
+			}
+			OpenOrders.close();
+			return OpenOrder;
+		}
+	}
+	
+	
+	/*
+	 * -----------------------------------------------------------------
+	 *                     class for homeOrders
+	 * -----------------------------------------------------------------
+	 */
+	public class HomeOrders extends OrderDetails{
+		public ArrayList<String> address = new ArrayList<String>();
+		public ArrayList<String> contact_number = new ArrayList<String>();
+		public HomeOrders OpenOrders() throws ClassNotFoundException, SQLException {
+			HomeOrders OpenOrder = new HomeOrders();
+			int i = 0;
+			String sql = "Select * from todays_orders torder, order_at_home as otable where torder.cur_Status = 'OPEN' and torder.order_mod = 'HOME' and torder.orderID = otable.orderID;";
+			ResultSet OpenOrders = DataRequest.executeQuery(sql); 
+			while(OpenOrders.next()) {
+				OpenOrder.TotalAmount.add(OpenOrders.getFloat("Total_Amount"));
+				OpenOrder.address.add(OpenOrders.getString("address"));
+				OpenOrder.contact_number.add(OpenOrders.getString("contact_number"));
+				OpenOrder.Name.add(OpenOrders.getString("Name_of_customer"));
+				OpenOrder.OrderId.add(OpenOrders.getInt("orderID"));
+				ArrayList<String> orderdetails = new ArrayList<String>();
+				orderdetails = orderDetails(OpenOrders.getString("order_list"));
+				OpenOrder.openorders.add(orderdetails);
+				
+			}
+			OpenOrders.close();
+			return OpenOrder;
+		}
+		
+		public HomeOrders ClosedOrders() throws ClassNotFoundException, SQLException {
+			HomeOrders OpenOrder = new HomeOrders();
+			int i = 0;
+			String sql = "Select * from todays_orders torder, order_at_home as otable where torder.cur_Status = 'CLOSED' and torder.order_mod = 'HOME' and torder.orderID = otable.orderID;";
+			ResultSet OpenOrders = DataRequest.executeQuery(sql); 
+			while(OpenOrders.next()) {
+				OpenOrder.TotalAmount.add(OpenOrders.getFloat("Total_Amount"));
+				OpenOrder.address.add(OpenOrders.getString("address"));
+				OpenOrder.contact_number.add(OpenOrders.getString("contact_number"));
+				OpenOrder.Name.add(OpenOrders.getString("Name_of_customer"));
+				OpenOrder.OrderId.add(OpenOrders.getInt("orderID"));
+				ArrayList<String> orderdetails = new ArrayList<String>();
+				orderdetails = orderDetails(OpenOrders.getString("order_list"));
+				OpenOrder.openorders.add(orderdetails);
+				
+			}
+			OpenOrders.close();
+			return OpenOrder;
+		}
+		
+		public HomeOrders CancelledOrders() throws ClassNotFoundException, SQLException {
+			HomeOrders OpenOrder = new HomeOrders();
+			int i = 0;
+			String sql = "Select * from todays_orders torder, order_at_home as otable where torder.cur_Status = 'CANCELLED' and torder.order_mod = 'HOME' and torder.orderID = otable.orderID;";
+			ResultSet OpenOrders = DataRequest.executeQuery(sql); 
+			while(OpenOrders.next()) {
+				OpenOrder.TotalAmount.add(OpenOrders.getFloat("Total_Amount"));
+				OpenOrder.address.add(OpenOrders.getString("address"));
+				OpenOrder.contact_number.add(OpenOrders.getString("contact_number"));
+				OpenOrder.Name.add(OpenOrders.getString("Name_of_customer"));
+				OpenOrder.OrderId.add(OpenOrders.getInt("orderID"));
+				ArrayList<String> orderdetails = new ArrayList<String>();
+				orderdetails = orderDetails(OpenOrders.getString("order_list"));
+				OpenOrder.openorders.add(orderdetails);
+				
+			}
+			OpenOrders.close();
+			return OpenOrder;
+		}
 	}
 	public int LastOrderId;
 	public ResultSet todaysOrders;
@@ -50,62 +189,7 @@ public class OrderHistory extends RestaurantDB{
 		DataRequest.executeUpdate(sql);
 	}
 	
-	public OpenOrderDetails OpenOrders() throws ClassNotFoundException, SQLException {
-		OpenOrderDetails OpenOrder = new OpenOrderDetails();
-		int i = 0;
-		String sql = "Select * from todays_orders where cur_Status = 'OPEN' ";
-		ResultSet OpenOrders = DataRequest.executeQuery(sql); 
-		while(OpenOrders.next()) {
-			OpenOrder.TotalAmount.add(OpenOrders.getFloat("Total_Amount"));
-			OpenOrder.TableNo.add(OpenOrders.getInt("table_no"));
-			OpenOrder.Name.add(OpenOrders.getString("Name_of_customer"));
-			OpenOrder.OrderId.add(OpenOrders.getInt("orderID"));
-			ArrayList<String> orderdetails = new ArrayList<String>();
-			orderdetails = orderDetails(OpenOrders.getString("order_list"));
-			OpenOrder.openorders.add(orderdetails);
-			
-		}
-		OpenOrders.close();
-		return OpenOrder;
-	}
 	
-	public OpenOrderDetails ClosedOrders() throws ClassNotFoundException, SQLException {
-		OpenOrderDetails OpenOrder = new OpenOrderDetails();
-		int i = 0;
-		String sql = "Select * from todays_orders where cur_Status = 'CLOSED'";
-		ResultSet OpenOrders = DataRequest.executeQuery(sql); 
-		while(OpenOrders.next()) {
-			OpenOrder.TotalAmount.add(OpenOrders.getFloat("Total_Amount"));
-			OpenOrder.TableNo.add(OpenOrders.getInt("table_no"));
-			OpenOrder.Name.add(OpenOrders.getString("Name_of_customer"));
-			OpenOrder.OrderId.add(OpenOrders.getInt("orderID"));
-			ArrayList<String> orderdetails = new ArrayList<String>();
-			orderdetails = orderDetails(OpenOrders.getString("order_list"));
-			OpenOrder.openorders.add(orderdetails);
-			
-		}
-		OpenOrders.close();
-		return OpenOrder;
-	}
-	
-	public OpenOrderDetails CancelledOrders() throws ClassNotFoundException, SQLException {
-		OpenOrderDetails OpenOrder = new OpenOrderDetails();
-		int i = 0;
-		String sql = "Select * from todays_orders where cur_Status = 'CANCELLED'";
-		ResultSet OpenOrders = DataRequest.executeQuery(sql); 
-		while(OpenOrders.next()) {
-			OpenOrder.TotalAmount.add(OpenOrders.getFloat("Total_Amount"));
-			OpenOrder.TableNo.add(OpenOrders.getInt("table_no"));
-			OpenOrder.Name.add(OpenOrders.getString("Name_of_customer"));
-			OpenOrder.OrderId.add(OpenOrders.getInt("orderID"));
-			ArrayList<String> orderdetails = new ArrayList<String>();
-			orderdetails = orderDetails(OpenOrders.getString("order_list"));
-			OpenOrder.openorders.add(orderdetails);
-			
-		}
-		OpenOrders.close();
-		return OpenOrder;
-	}
 	
 	//Function to convert int array of itemcode and number of items into a single string of json format
 	public String itemDetailsToString(int[][] itemDetails) {

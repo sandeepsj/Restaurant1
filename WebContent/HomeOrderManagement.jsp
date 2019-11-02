@@ -84,8 +84,8 @@ if(checksession.getAttribute("empid") == null){
 									<li><a href="home.jsp">Home</a></li>
 									<li><a href="todaysMenuEditor.jsp">Today's Menu</a></li>
 									<li><a href="FoodTableEditor.jsp">Edit Food DB</a></li>
-									<li class="active"><a href="OrderManagement.jsp">Todays Orders</a></li>
-									<li><a href="HomeOrderManagement.jsp">Home Delivery</a></li>
+									<li><a href="OrderManagement.jsp">Todays Orders</a></li>
+									<li class="active"><a href="HomeOrderManagement.jsp">Home Delivery</a></li>
 									<li><a href="OrderHistory.jsp">Order History</a></li>
                                     <li><a onclick="signout()">Sign Out</a></li>
 								</ul>
@@ -104,7 +104,7 @@ if(checksession.getAttribute("empid") == null){
 	<!-- end site-header -->
     <div id="banner-small" class="banner-small full-screen-mode parallax">
     </div>
-    <iframe width="100%" src="orderManagementsub.jsp" style="border:none;height: 100%;" id="myIframe">
+    <iframe width="100%" src="HomeOrderManagementSub.jsp" style="border:none;height: 100%;" id="myIframe">
     </iframe>
     
     
