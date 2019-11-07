@@ -1,10 +1,12 @@
 <%@ page import="javax.servlet.http.HttpSession"%>
+<%@ page import="tools.NotificationTools" %>
+<%@ page import="db.ActivityLog" %>
+<%@ page import="java.sql.ResultSet" %>
 <%
-
-HttpSession checksession = request.getSession(false);
-if(checksession.getAttribute("empid") == null){
-	response.sendRedirect("signin.jsp");
-}
+	HttpSession checksession = request.getSession(false);
+	if (checksession.getAttribute("empid") == null) {
+		response.sendRedirect("signin.jsp");
+	}
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -27,7 +29,7 @@ if(checksession.getAttribute("empid") == null){
     <!-- Site Icons -->
     <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
     <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
-
+    
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <!-- Site CSS -->
@@ -36,7 +38,7 @@ if(checksession.getAttribute("empid") == null){
     <link rel="stylesheet" href="css/responsive.css">
     <!-- color -->
     <link id="changeable-colors" rel="stylesheet" href="css/colors/strong-blue.css" />
-
+    <link rel="stylesheet" href="css/notificationframe.css">
     <!-- Modernizer -->
     <script src="js/modernizer.js"></script>
 
@@ -44,6 +46,7 @@ if(checksession.getAttribute("empid") == null){
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
+
 
 </head>
 
@@ -76,11 +79,49 @@ if(checksession.getAttribute("empid") == null){
 								<ul class="nav navbar-nav navbar-right">
 									<li class="active"><a href="home.jsp">Home</a></li>
 									<li><a href="todaysMenuEditor.jsp">Today's Menu</a></li>
-									<li><a href="FoodTableEditor.jsp">Edit Food DB</a></li>
+									<li><a href="FoodTableEditor.jsp">Food DB</a></li>
 									<li><a href="OrderManagement.jsp">Todays Orders</a></li>
                                     <li><a href="HomeOrderManagement.jsp">Home Delivery</a></li>
 									<li><a href="OrderHistory.jsp">Order History</a></li>
-                                    <li><a onclick="signout()">Sign Out</a></li>
+                                    <li class="dropdown">
+                                    	<a href="#" class="notification dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                    		  <span>Account</span>
+                                    		  <span class="badge">new</span>
+                                    	</a>
+                                        <ul class="dropdown-menu nav navbar-nav navbar-right" style="border-radius: 15px 15px 15px 15px ;padding-bottom: 20px;">
+
+
+
+
+
+
+
+                                            
+
+                                        		<iframe class = "notification-frame-container" src="notificationFrame.jsp" scrolling="no" style="border:none;" id="myIframe">
+                                        		</iframe>
+                                        	
+                                            
+
+
+
+
+
+
+                                            <div class="navigator-container">
+	                                            <li>
+	                                            	<div class="navigator">
+	                                            	<a href="profile.jsp">Your Profile</a>
+	                                            	</div>
+	                                            
+	                                            	<div class="navigator">
+	                                            	<a onclick="signout()">Sign Out</a>
+	                                            	</div>
+	                                            </li>
+                                        	</div>
+                                            
+                                        </ul>
+                                    </li>
 								</ul>
 							</div>
 							<!-- end nav-collapse -->
@@ -345,6 +386,8 @@ if(checksession.getAttribute("empid") == null){
 		xhttp.send();
 	}
 	</script>
+	
+
 </body>
 
 </html>

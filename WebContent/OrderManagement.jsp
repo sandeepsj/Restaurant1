@@ -1,11 +1,15 @@
 <%@ page import = "java.util.ArrayList" %>
 <%@ page import="db.OrderHistory"%>
 <%@ page import="javax.servlet.http.HttpSession"%>
+<%@ page import="tools.NotificationTools" %>
 <%
 HttpSession checksession = request.getSession(false);
 if(checksession.getAttribute("empid") == null){
 	response.sendRedirect("signin.jsp");
 }
+NotificationTools ntools = new NotificationTools();
+int CountHomeOrders = ntools.CountOpenOrders("HOME");
+int CountTableOrders = ntools.CountOpenOrders("TABLE");
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -28,7 +32,7 @@ if(checksession.getAttribute("empid") == null){
     <!-- Site Icons -->
     <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
     <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
-
+    <link rel="stylesheet" type="text/css" href="css/notificationStyles.css">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <!-- Site CSS -->
@@ -37,7 +41,7 @@ if(checksession.getAttribute("empid") == null){
     <link rel="stylesheet" href="css/responsive.css">
     <!-- color -->
     <link id="changeable-colors" rel="stylesheet" href="css/colors/strong-blue.css" />
-
+    <link rel="stylesheet" href="css/notificationframe.css">
     <!-- Modernizer -->
     <script src="js/modernizer.js"></script>
 
@@ -83,11 +87,32 @@ if(checksession.getAttribute("empid") == null){
 								<ul class="nav navbar-nav navbar-right">
 									<li><a href="home.jsp">Home</a></li>
 									<li><a href="todaysMenuEditor.jsp">Today's Menu</a></li>
-									<li><a href="FoodTableEditor.jsp">Edit Food DB</a></li>
+									<li><a href="FoodTableEditor.jsp">Food DB</a></li>
 									<li class="active"><a href="OrderManagement.jsp">Todays Orders</a></li>
 									<li><a href="HomeOrderManagement.jsp">Home Delivery</a></li>
 									<li><a href="OrderHistory.jsp">Order History</a></li>
-                                    <li><a onclick="signout()">Sign Out</a></li>
+                                    <li class="dropdown ">
+                                    	<a href="#" class="notification dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                    		  <span>Account</span>
+                                    		  <span class="badge">new</span>
+                                    	</a>
+                                        <ul class="dropdown-menu nav navbar-nav navbar-right" style="border-radius: 15px 15px 15px 15px ;padding-bottom: 20px;">
+                                        	<iframe class = "notification-frame-container" src="notificationFrame.jsp" scrolling="no" style="border:none;" id="myIframe">
+                                        		</iframe>
+                                            <div class="navigator-container">
+	                                            <li>
+	                                            	<div class="navigator">
+	                                            	<a href="profile.jsp">Your Profile</a>
+	                                            	</div>
+	                                            
+	                                            	<div class="navigator">
+	                                            	<a onclick="signout()">Sign Out</a>
+	                                            	</div>
+	                                            </li>
+                                        	</div>
+                                            
+                                        </ul>
+                                    </li>
 								</ul>
 							</div>
 							<!-- end nav-collapse -->

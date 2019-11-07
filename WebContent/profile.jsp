@@ -1,6 +1,26 @@
 <%@ page import="db.*"%>
 <%@ page import="java.sql.*"%>
-
+<%@ page import="tools.NotificationTools" %>
+<%
+	HttpSession checksession = request.getSession(false);
+	if (checksession.getAttribute("empid") == null) {
+		response.sendRedirect("signin.jsp");
+	} else {
+		int empid = Integer.parseInt((String) checksession.getAttribute("empid"));
+		Employee emp = new Employee();
+		emp.getrow(empid);
+		ResultSet empDetails = emp.EmployeeRow;
+		String name = empDetails.getString("name");
+		String phno = empDetails.getString("phone_number");
+		String address = empDetails.getString("address");
+		String designation = empDetails.getString("designation");
+		String salary = empDetails.getString("salary");
+		String password = empDetails.getString("password");
+		
+		NotificationTools ntools = new NotificationTools();
+		int CountHomeOrders = ntools.CountOpenOrders("HOME");
+		int CountTableOrders = ntools.CountOpenOrders("TABLE");
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,7 +42,7 @@
 <!-- Site Icons -->
 <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
 <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
-
+<link rel="stylesheet" type="text/css" href="css/notificationStyles.css">
 <!-- Bootstrap CSS -->
 <link rel="stylesheet" href="css/bootstrap.min.css">
 <!-- Site CSS -->
@@ -129,7 +149,23 @@
 	margin-left: 0.3rem;
 }
 </style>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('.increment').on('click', function(){
+			var name = this.getAttribute("name");
+			
+			var val = document.getElementById(name).value;
+			document.getElementById(name).value = Number(val)+1;
+		});
+		$('.decrement').on('click', function(){
+			var name = this.getAttribute("name");
+			console.log(name);
+			var val = document.getElementById(name).value;
+			document.getElementById(name).value = Number(val)-1;
+		});
+	});
 
+    </script>
 
 </head>
 
@@ -160,9 +196,67 @@
 							</div>
 							<div id="navbar" class="navbar-collapse collapse">
 								<ul class="nav navbar-nav navbar-right">
-									
-                                    <li><a href="signin.jsp">Sign In</a></li>
-                                    <li class="active"><a href="signup.jsp">Sign Up</a></li>
+									<li><a href="home.jsp">Home</a></li>
+									<li><a href="todaysMenuEditor.jsp">Today's Menu</a></li>
+									<li><a href="FoodTableEditor.jsp">Food DB</a></li>
+									<li><a href="OrderManagement.jsp">Todays Orders</a></li>
+									<li><a href="HomeOrderManagement.jsp">Home Delivery</a></li>
+									<li><a href="OrderHistory.jsp">Order History</a></li>
+									<li class="dropdown ">
+                                    	<a href="#" class="notification dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                    		  <span>Account</span>
+                                    		  <span class="badge">3</span>
+                                    	</a>
+                                        <ul class="dropdown-menu nav navbar-nav navbar-right" style="border-radius: 15px 15px 15px 15px ;padding-bottom: 20px;">
+                                        	<div class="notification-container">
+												<div class="alert">
+												  <span class="closebtn">&times;</span>  
+												  <strong>Danger!</strong> Indicates a dangerous or potentially negative action.
+												</div>
+
+												<div class="alert success">
+												  <span class="closebtn">&times;</span>  
+												  <strong>Success!</strong> Indicates a successful or positive action.
+												</div>
+
+												<div class="alert info">
+												  <span class="closebtn">&times;</span>  
+												  <strong>Info!</strong> Indicates a neutral informative change or action.
+												</div>
+
+												<div class="alert warning">
+												  <span class="closebtn">&times;</span>  
+												  <strong>Warning!</strong> Indicates a warning that might need attention.
+												</div>
+                                            </div>
+                                            <div class="status-container">
+	                                            <li>
+	                                            	
+	                                            	<div class="status-block1"  onclick = "window.location.href='OrderManagement.jsp'">
+	                                            			<p><b>On Table</b></p>
+	                                            			<p><%=CountTableOrders %> Orders are in Waiting list</p>
+	                                            	</div>
+	                                            	<div class="status-block2" onclick = "window.location.href='HomeOrderManagement.jsp'">
+	                                            			<p><b>Home delivery</b></p>
+	                                            			<p><%=CountHomeOrders %> Orders are in Waiting list</p>
+	                                            	</div>
+	                                            	
+	                                            </li>
+                                            </div>
+                                            <div class="navigator-container">
+	                                            <li>
+	                                            	<div class="navigator">
+	                                            	<a href="profile.jsp">Your Profile</a>
+	                                            	</div>
+	                                            
+	                                            	<div class="navigator">
+	                                            	<a onclick="signout()">Sign Out</a>
+	                                            	</div>
+	                                            </li>
+                                        	</div>
+                                            
+                                        </ul>
+                                    </li>
 								</ul>
 							</div>
 							<!-- end nav-collapse -->
@@ -182,7 +276,7 @@
 	</div>
 	<!-- end banner -->
 	<form method="post" class="reservations-box" name="contactform"
-		id="contactform" action="signup">
+		id="contactform" action="ProfileEditor">
 		
 		<div id="reservation" class="reservations-main pad-top-100 pad-bottom-100">
 			<div class="container">
@@ -197,60 +291,66 @@
 							<h4 class="form-title">Create a new account</h4>
 							<p>PLEASE FILL OUT ALL REQUIRED* FIELDS. THANKS!</p>
 						
-
+							<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+								<div class="form-box">
+									<input type="text" name="empid" id="form_name"
+										placeholder="empid" required="required"
+										data-error="Firstname is required." value = '<%= empid %>' disabled>
+								</div>
+							</div>
 							<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
 								<div class="form-box">
 									<input type="text" name="name" id="form_name"
 										placeholder="Name" required="required"
-										data-error="Firstname is required.">
+										data-error="Firstname is required." value = '<%= name %>'>
 								</div>
 							</div>
 							<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
 								<div class="form-box">
 									<input type="number" name="salary" id="address"
 										placeholder="salary" required="required"
-										data-error="Firstname is required.">
+										data-error="Firstname is required." value = '<%= salary %>'>
 								</div>
 							</div>
 							<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
 								<div class="form-box">
 									<input type="text" name="address" id="phno"
 										placeholder="address" required="required"
-										data-error="Firstname is required.">
+										data-error="Firstname is required." value = '<%= address %>'>
 								</div>
 							</div>
 							<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
 								<div class="form-box">
 									<input type="text" name="designation" id="phno"
 										placeholder="designation" required="required"
-										data-error="Firstname is required.">
+										data-error="Firstname is required." value = '<%=designation %>'>
 								</div>
 							</div>
 							<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
 								<div class="form-box">
 									<input type="password" name="password" id="phno"
 										placeholder="password" required="required"
-										data-error="Firstname is required.">
+										data-error="Firstname is required." value = '<%= password %>'>
 								</div>
 							</div>
 							<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
 								<div class="form-box">
 									<input type="password" name="phno" id="phno"
 										placeholder="confirm password" required="required"
-										data-error="Firstname is required.">
+										data-error="Firstname is required." value = '<%=password %>'>
 								</div>
 							</div>
 							<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
 								<div class="form-box">
 									<input type="number" name="phonenumber" id="phno"
 										placeholder="Phone Number" required="required"
-										data-error="Firstname is required.">
+										data-error="Firstname is required." value = '<%= phno %>'>
 								</div>
 							</div>
 							<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 								<div class="reserve-book-btn text-center">
 									<button class="hvr-underline-from-center" type="submit"
-										value="Submit" id="submit">Sign Up</button>
+										value="Submit" id="submit">Submit</button>
 								</div>
 							</div>
 							<!-- end col -->
@@ -272,6 +372,22 @@
 	<script src="js/bootstrap.min.js"></script>
 	<!-- ALL PLUGINS -->
 	<script src="js/custom.js"></script>
+	   <script src="js/custom.js"></script>
+    	<script>
+	function signout(){
+		var xhttp = new XMLHttpRequest();
+		xhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+				alert("successfully signed out");
+				location.reload();
+			}
+		};
+		var url = "signout";
+		xhttp.open("GET", url, true);
+		xhttp.send();
+	}
+	</script>
 </body>
 
 </html>
+<% } %>

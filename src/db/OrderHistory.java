@@ -89,6 +89,24 @@ public class OrderHistory extends RestaurantDB{
 			OpenOrders.close();
 			return OpenOrder;
 		}
+		public TableOrders RejectedOrders() throws ClassNotFoundException, SQLException {
+			TableOrders OpenOrder = new TableOrders();
+			int i = 0;
+			String sql = "Select * from todays_orders torder, orders_on_table as otable where torder.cur_Status = 'REJECTED' and torder.order_mod = 'TABLE' and torder.orderID = otable.orderID;";
+			ResultSet OpenOrders = DataRequest.executeQuery(sql); 
+			while(OpenOrders.next()) {
+				OpenOrder.TotalAmount.add(OpenOrders.getFloat("Total_Amount"));
+				OpenOrder.TableNo.add(OpenOrders.getInt("table_no"));
+				OpenOrder.Name.add(OpenOrders.getString("Name_of_customer"));
+				OpenOrder.OrderId.add(OpenOrders.getInt("orderID"));
+				ArrayList<String> orderdetails = new ArrayList<String>();
+				orderdetails = orderDetails(OpenOrders.getString("order_list"));
+				OpenOrder.openorders.add(orderdetails);
+				
+			}
+			OpenOrders.close();
+			return OpenOrder;
+		}
 	}
 	
 	
@@ -159,6 +177,25 @@ public class OrderHistory extends RestaurantDB{
 			OpenOrders.close();
 			return OpenOrder;
 		}
+		public HomeOrders RejectedOrders() throws ClassNotFoundException, SQLException {
+			HomeOrders OpenOrder = new HomeOrders();
+			int i = 0;
+			String sql = "Select * from todays_orders torder, order_at_home as otable where torder.cur_Status = 'REJECTED' and torder.order_mod = 'HOME' and torder.orderID = otable.orderID;";
+			ResultSet OpenOrders = DataRequest.executeQuery(sql); 
+			while(OpenOrders.next()) {
+				OpenOrder.TotalAmount.add(OpenOrders.getFloat("Total_Amount"));
+				OpenOrder.address.add(OpenOrders.getString("address"));
+				OpenOrder.contact_number.add(OpenOrders.getString("contact_number"));
+				OpenOrder.Name.add(OpenOrders.getString("Name_of_customer"));
+				OpenOrder.OrderId.add(OpenOrders.getInt("orderID"));
+				ArrayList<String> orderdetails = new ArrayList<String>();
+				orderdetails = orderDetails(OpenOrders.getString("order_list"));
+				OpenOrder.openorders.add(orderdetails);
+				
+			}
+			OpenOrders.close();
+			return OpenOrder;
+		}
 	}
 	public int LastOrderId;
 	public ResultSet todaysOrders;
@@ -183,6 +220,9 @@ public class OrderHistory extends RestaurantDB{
 			sql += "\"CLOSED\" ";
 		}
 		else if(Action.compareTo("Reject") == 0) {
+			sql += "\"REJECTED\" ";
+		}
+		else if(Action.compareTo("Cancelled") == 0) {
 			sql += "\"CANCELLED\" ";
 		}
 		sql += "WHERE orderID = "+OrderId;

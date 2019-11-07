@@ -123,6 +123,9 @@
                             <div class="panel-footer">
                                 <a class="btn btn-lg btn-block hvr-underline-from-center" href="#"><p id="orderStatus">Waiting</p></a>
                             </div>
+                            <div class="panel-footer">
+                                <a class="btn btn-lg btn-block hvr-underline-from-center" onclick = "cancel(<%= request.getParameter("OrderId") %>)"><p id="orderStatus">cancel</p></a>
+                            </div>
                             
                         </div>
                     </div>
@@ -136,10 +139,11 @@
         <!-- end container -->
     </div>
     <!-- end pricing-main -->
-    <form type="hidden" id="orderidform">
-    	<input type="hidden" id="orderid" >
-    </form>
     
+    <form type="hidden" id="CancelOrder" action="CancelOrder">
+        <input id="Action" type="hidden" name="Action">
+        <input id="OrderId" type="hidden" name="OrderId">
+    </form>
     <a href="#" class="scrollup" style="display: none;">Scroll</a>
 
     <section id="color-panel" class="close-color-panel">
@@ -153,7 +157,7 @@
             <a title="vivid-yellow" class="switcher vivid-yellow-bg"></a>
         </div>
     </section>
-
+	
     <!-- ALL JS FILES -->
     <script src="js/all.js"></script>
     <script src="js/bootstrap.min.js"></script>
@@ -166,14 +170,18 @@
     		xhttp.onreadystatechange = function() {
     			if (this.readyState == 4 && this.status == 200) {
     				document.getElementById("orderStatus").innerHTML = this.responseText;
-    				if(this.responseText == "CANCELLED"){
+    				if(this.responseText == "REJECTED"){
     					document.getElementById("orderStatus").innerHTML = "Sorry Your Order is Rejected! Contact any Staff"
     				}
-    				if(this.responseText == "OPEN"){
+    				else if(this.responseText == "OPEN"){
     					document.getElementById("orderStatus").innerHTML = "Your Order is in Queue, Please Wait for a Response"
     				}
-    				if(this.responseText == "CLOSED"){
+    				else if(this.responseText == "CLOSED"){
     					document.getElementById("orderStatus").innerHTML = "Your Order is Confirmed."
+    				}
+    				else if(this.responseText == "CANCELLED"){
+    					document.getElementById("orderStatus").innerHTML = "You Cancelled the order ..you can go back to menu and place order again Thank you"
+    					clearInterval(timer);
     				}
     			}
     		};
@@ -181,6 +189,12 @@
     		xhttp.open("GET", url, true);
     		xhttp.send();
     	}
+    
+    	function cancel(OrderId){
+            document.getElementById("Action").value = "Cancelled"
+            document.getElementById("OrderId").value = OrderId;
+            document.getElementById("CancelOrder").submit();
+        }
     </script>
 </body>
 

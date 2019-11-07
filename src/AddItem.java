@@ -42,7 +42,7 @@ public class AddItem extends HttpServlet {
 		
 		try {
 			Foods food = new Foods();
-			food.insertRow(Integer.parseInt(request.getParameter("ItemCode")), request.getParameter("FoodItemName"), request.getParameter("FoodDomain"), Float.parseFloat(request.getParameter("Price")), Integer.parseInt(request.getParameter("Rating")), request.getParameter("imagePath"), request.getParameter("Description"));
+			food.insertRow(request.getParameter("FoodItemName"), request.getParameter("FoodDomain"), Float.parseFloat(request.getParameter("Price")), Integer.parseInt(request.getParameter("Rating")), request.getParameter("imagePath"), request.getParameter("Description"));
 		} catch (NumberFormatException | SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

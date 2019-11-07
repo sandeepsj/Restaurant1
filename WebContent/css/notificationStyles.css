@@ -1,0 +1,92 @@
+.notification-super-container{
+	height: 550px;
+	width: 300px;
+	font-size : 14px;
+}
+.notification-container{
+	height: 400px;
+	width: 300px;
+	padding: 10px;
+  overflow: auto;
+  margin-bottom:25px;
+}
+.notification-box{
+	
+	
+}
+
+.notification {
+  background-color: #555;
+  color: white;
+  text-decoration: none;
+  padding: 15px 26px;
+  position: relative;
+  display: inline-block;
+  
+}
+
+.notification:hover {
+  background: red;
+}
+
+.notification .badge {
+  border-radius: 50%;
+
+}
+
+.alert {
+	
+	font-size: 14px;
+	font-family: 'Roboto', sans-serif;
+	border-radius: 6px;
+  padding: 20px;
+  background-color: #f44336;
+  color: white;
+  opacity: 1;
+  transition: opacity 0.6s;
+  margin-bottom: 15px;
+}
+
+.alert.success {background-color: #4CAF50;}
+.alert.info {background-color: #2196F3;}
+.alert.warning {background-color: #ff9800;}
+
+.closebtn {
+  margin-left: 15px;
+  color: white;
+  font-weight: bold;
+  float: right;
+  font-size: 22px;
+  line-height: 20px;
+  cursor: pointer0;
+  transition: 0.3s;
+}
+
+.closebtn:hover {
+  color: black;
+}
+
+
+
+.status-block1, .status-block2 {
+	font-size: 14px;
+	font-family: 'Roboto', sans-serif;
+  padding: 20px;
+  color: white;
+  opacity: 1;
+  transition: opacity 0.6s;
+  margin-bottom: 15px;
+  width: 34%;
+  float: left;
+}
+.status-block1{
+  background-color: #2196F3;
+
+}
+.status-block2{
+  background-color: #4CAF50;
+}
+.status-container{
+  padding :10px;
+  margin-right:-19px;
+}

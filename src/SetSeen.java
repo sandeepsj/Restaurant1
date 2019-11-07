@@ -9,21 +9,19 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import db.OrderHistory;
-
-
+import db.ActivityLog;
 
 /**
- * Servlet implementation class CurStatus
+ * Servlet implementation class SetSeen
  */
-@WebServlet("/CurStatus")
-public class CurStatus extends HttpServlet {
+@WebServlet("/SetSeen")
+public class SetSeen extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public CurStatus() {
+    public SetSeen() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -33,14 +31,13 @@ public class CurStatus extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		OrderHistory to;
+		//response.getWriter().append("Served at: ").append(request.getContextPath());
+		ActivityLog alog;
 		try {
-			to = new OrderHistory();
-			System.out.println(request.getParameter("OrderId"));
-			response.getWriter().append(to.curStatus(Integer.parseInt(request.getParameter("OrderId"))));
+			alog = new ActivityLog();
+			alog.setSeen(request.getParameter("Activity_id"));
 		} catch (ClassNotFoundException | SQLException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 		
 	}

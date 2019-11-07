@@ -85,4 +85,12 @@
       <servlet-name>signout</servlet-name>
       <url-pattern>/signout</url-pattern>
   </servlet-mapping>
+    <servlet>
+      <servlet-name>ProfileEditor</servlet-name>
+      <servlet-class>ProfileEditor</servlet-class>
+  </servlet>
+  <servlet-mapping>
+      <servlet-name>ProfileEditor</servlet-name>
+      <url-pattern>/ProfileEditor</url-pattern>
+  </servlet-mapping>
 </web-app>

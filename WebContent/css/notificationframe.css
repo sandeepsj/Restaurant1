@@ -1,0 +1,15 @@
+.notification-frame-container {
+	height: 600px;
+	width: 330px;
+}
+
+.navigator-container {
+	padding: 10px;
+}
+
+.navigator {
+	padding: 0px;
+	color: white;
+	width: 50%;
+	float: left;
+}

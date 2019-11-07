@@ -9,21 +9,19 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import db.OrderHistory;
-
-
+import db.Employee;
 
 /**
- * Servlet implementation class CurStatus
+ * Servlet implementation class ProfileEditor
  */
-@WebServlet("/CurStatus")
-public class CurStatus extends HttpServlet {
+@WebServlet("/ProfileEditor")
+public class ProfileEditor extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public CurStatus() {
+    public ProfileEditor() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -33,16 +31,7 @@ public class CurStatus extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		OrderHistory to;
-		try {
-			to = new OrderHistory();
-			System.out.println(request.getParameter("OrderId"));
-			response.getWriter().append(to.curStatus(Integer.parseInt(request.getParameter("OrderId"))));
-		} catch (ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
+		response.getWriter().append("Served at: ").append(request.getContextPath());
 	}
 
 	/**
@@ -50,7 +39,16 @@ public class CurStatus extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		doGet(request, response);
+		Employee emp;
+		try {
+			emp = new Employee();
+			emp.updaterow((String)request.getSession().getAttribute("empid"), request.getParameter("name"), request.getParameter("salary"), request.getParameter("address"), request.getParameter("designation"), request.getParameter("password"), request.getParameter("phonenumber"));
+			response.sendRedirect("home.jsp");
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 
 }

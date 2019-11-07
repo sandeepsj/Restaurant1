@@ -79,23 +79,22 @@ public class Foods extends RestaurantDB{
 		conn.createStatement().executeUpdate(Query);
 	}
 
-	public void insertRow(int itemCode, String FoodItemName, String FoodDomain, float Price, int Rating, String image,String description) throws SQLException {
+	public void insertRow(String FoodItemName, String FoodDomain, float Price, int Rating, String image,String description) throws SQLException {
 		PreparedStatement insertStatement;
 		//Preparing insert statement
 		String qns = "";
-		for (int i = 0;i < no_of_columns-1;i++)
+		for (int i = 0;i < no_of_columns-2;i++)
 			qns += "?,";
 		qns += "?";
 		Query = "INSERT INTO FOODS VALUES("+qns+")";
 		insertStatement = conn.prepareStatement(Query);
 		
-		insertStatement.setInt(1, itemCode);
-		insertStatement.setString(2, FoodItemName);
-		insertStatement.setString(3, FoodDomain);
-		insertStatement.setFloat(4, Price);
-		insertStatement.setInt(5, Rating);
-		insertStatement.setString(6, image);
-		insertStatement.setString(7, description);
+		insertStatement.setString(1, FoodItemName);
+		insertStatement.setString(2, FoodDomain);
+		insertStatement.setFloat(3, Price);
+		insertStatement.setInt(4, Rating);
+		insertStatement.setString(5, image);
+		insertStatement.setString(6, description);
 		insertStatement.executeUpdate();
 		//DataRequest.executeUpdate("Insert into Todays_menu values("+itemCode+",0)");//Use trigger
 		Refresh();

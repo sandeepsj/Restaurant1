@@ -2,6 +2,10 @@
 <%@ page import="java.sql.*"%>
 <%
 	Foods food = new Foods();
+HttpSession checksession = request.getSession(false);
+if (checksession.getAttribute("empid") != null) {
+	response.sendRedirect("home.jsp");
+}
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -131,23 +135,7 @@
 	margin-left: 0.3rem;
 }
 </style>
-<script type="text/javascript">
-	$(document).ready(function() {
-		$('.increment').on('click', function(){
-			var name = this.getAttribute("name");
-			
-			var val = document.getElementById(name).value;
-			document.getElementById(name).value = Number(val)+1;
-		});
-		$('.decrement').on('click', function(){
-			var name = this.getAttribute("name");
-			console.log(name);
-			var val = document.getElementById(name).value;
-			document.getElementById(name).value = Number(val)-1;
-		});
-	});
 
-    </script>
 
 </head>
 

@@ -8,6 +8,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import db.Employee;
 
@@ -33,7 +34,7 @@ public class signup extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		response.getWriter().append("Served at: ").append(request.getContextPath());
-		response.sendRedirect("signin.jsp");
+		
 	}
 
 	/**
@@ -43,13 +44,16 @@ public class signup extends HttpServlet {
 		// TODO Auto-generated method stub
 		try {
 			Employee emp = new Employee();
-			emp.insertRow(request.getParameter("name"), Float.parseFloat(request.getParameter("salary")), request.getParameter("address"), request.getParameter("designation"), request.getParameter("password"), request.getParameter("phonenumber"));
+			int empid = emp.insertRow(request.getParameter("name"), Float.parseFloat(request.getParameter("salary")), request.getParameter("address"), request.getParameter("designation"), request.getParameter("password"), request.getParameter("phonenumber"));
+			HttpSession session = request.getSession();
+			session.setAttribute("empid", ""+empid);
+			response.sendRedirect("profile.jsp");
 		} catch (ClassNotFoundException | SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		doGet(request, response);
+		//doGet(request, response);
 	}
 
 }
