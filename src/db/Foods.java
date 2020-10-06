@@ -86,9 +86,8 @@ public class Foods extends RestaurantDB{
 		for (int i = 0;i < no_of_columns-2;i++)
 			qns += "?,";
 		qns += "?";
-		Query = "INSERT INTO FOODS VALUES("+qns+")";
+		Query = "INSERT INTO FOODS (FoodItemName, FoodDomain, Price, Rating, imagePath, Description) VALUES("+qns+")";
 		insertStatement = conn.prepareStatement(Query);
-		
 		insertStatement.setString(1, FoodItemName);
 		insertStatement.setString(2, FoodDomain);
 		insertStatement.setFloat(3, Price);

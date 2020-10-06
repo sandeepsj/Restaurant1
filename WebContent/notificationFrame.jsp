@@ -144,10 +144,10 @@
 			xhttp.open("GET", url, true);
 			xhttp.send();
 			if(Type == 'HOME' && Action != 'CLOSE'){
-				window.location.href='HomeOrderManagement.jsp';
+				window.top.location.href='HomeOrderManagement.jsp';
 			}
 			else if(Type == 'TABLE' && Action != 'CLOSE'){
-				window.location.href='OrderManagement.jsp';
+				window.top.location.href='OrderManagement.jsp';
 			}
 			
 		}

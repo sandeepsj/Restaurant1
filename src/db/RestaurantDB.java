@@ -21,6 +21,9 @@ public class RestaurantDB {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			conn=DriverManager.getConnection("jdbc:mysql://localhost:3306/restaurant?serverTimezone=UTC#", "root", null);
+			if (conn == null) {
+				System.out.println("Here");
+			}
 		//	staticDataRequest = conn.createStatement();
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -32,7 +35,8 @@ public class RestaurantDB {
 		
 	}
 	public RestaurantDB() throws ClassNotFoundException, SQLException {
-		DataRequest = conn.createStatement();
+		DataRequest = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
+                ResultSet.CONCUR_UPDATABLE);
 	}
 	protected void finalize() throws Throwable{
 		DataRequest.close();
